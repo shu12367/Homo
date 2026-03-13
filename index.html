@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BLASEN - Auto Clicker Toggle</title>
+    <title>BLASEN - Arena Kampf</title>
     <style>
         * {
             margin: 0;
@@ -21,6 +21,7 @@
             justify-content: center;
             align-items: center;
             padding: 10px;
+            touch-action: none;
         }
 
         .game-container {
@@ -49,11 +50,238 @@
             margin-bottom: 5px;
         }
 
-        .rebirth-info {
+        .main-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .menu-button {
+            flex: 1;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid gold;
+            text-align: center;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .menu-button.active {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            border-color: white;
+        }
+
+        /* MAIN GAME VIEW */
+        .main-view {
+            display: block;
+        }
+
+        .main-view.hidden {
+            display: none;
+        }
+
+        /* ARENA VIEW */
+        .arena-view {
+            display: none;
+        }
+
+        .arena-view.active {
+            display: block;
+        }
+
+        .arena-stats {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            border: 3px solid gold;
+        }
+
+        .arena-stat {
+            background: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .arena-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #8B4513;
+            border-radius: 30px;
+            border: 4px solid gold;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        #arenaCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #D2B48C;
+            touch-action: none;
+        }
+
+        .arena-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .arena-joystick {
+            flex: 2;
+            background: #4a4a4a;
+            border-radius: 30px;
+            padding: 20px;
+            border: 4px solid gold;
+            position: relative;
+            height: 120px;
+            touch-action: none;
+        }
+
+        .joystick-base {
+            width: 60px;
+            height: 60px;
+            background: #666;
+            border-radius: 30px;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid #333;
+        }
+
+        .joystick-handle {
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            border-radius: 20px;
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid white;
+            cursor: pointer;
+            transition: 0.05s;
+            touch-action: none;
+        }
+
+        .arena-attack-button {
+            flex: 1;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid gold;
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        .arena-attack-button:active {
+            transform: scale(0.95);
+        }
+
+        .attack-icon {
+            font-size: 40px;
+        }
+
+        .attack-text {
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .enemy-list {
+            background: #34495e;
+            border-radius: 20px;
+            padding: 15px;
+            border: 3px solid gold;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .enemy-item {
+            background: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid gold;
+        }
+
+        .enemy-item.current {
+            background: #f1c40f;
+            border: 3px solid #e67e22;
+        }
+
+        .enemy-health-bar {
+            width: 100px;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .enemy-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .tournament-info {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 3px solid gold;
+            text-align: center;
+        }
+
+        .tournament-button {
+            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
             color: white;
             font-size: 20px;
             font-weight: bold;
-            text-shadow: 2px 2px 0 #000;
+            padding: 15px;
+            border-radius: 30px;
+            border: 3px solid white;
+            cursor: pointer;
+            margin-top: 10px;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .tournament-button:active {
+            transform: scale(0.95);
+        }
+
+        .tournament-button.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .back-button {
+            background: #95a5a6;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 15px;
+            cursor: pointer;
+            border: 2px solid white;
         }
 
         .stats-container {
@@ -88,37 +316,6 @@
             color: #2c3e50;
         }
 
-        .stat-value#coins {
-            color: gold;
-            text-shadow: 1px 1px 0 #000;
-        }
-
-        .stat-value#strength {
-            color: #e74c3c;
-        }
-
-        .character-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .character-area {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            border-radius: 30px;
-            padding: 15px;
-            border: 4px solid gold;
-            cursor: pointer;
-            transition: transform 0.1s;
-            text-align: center;
-            flex: 2;
-        }
-
-        .character-area:active {
-            transform: scale(0.98);
-        }
-
-        /* AUTO CLICKER TOGGLE BUTTON */
         .auto-toggle-button {
             background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
             border-radius: 30px;
@@ -132,263 +329,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 5px 0 #4a4a4a;
         }
 
         .auto-toggle-button.active {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            box-shadow: 0 0 20px #2ecc71, 0 5px 0 #1e8449;
-        }
-
-        .auto-icon {
-            font-size: 48px;
-            filter: drop-shadow(2px 2px 0 #000);
-        }
-
-        .auto-status {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 0 #000;
-            margin-top: 5px;
-        }
-
-        .auto-speed {
-            font-size: 14px;
-            color: white;
-            background: rgba(0,0,0,0.3);
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-top: 5px;
-            border: 1px solid white;
-        }
-
-        .character {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .blasen-character {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform: scale(0.7);
-            top: -20px;
-        }
-
-        .head {
-            position: absolute;
-            width: 140px;
-            height: 140px;
-            background: #f5deb3;
-            border-radius: 50%;
-            top: 20px;
-            left: 5px;
-            border: 4px solid #000;
-        }
-
-        .hair {
-            position: absolute;
-            width: 150px;
-            height: 50px;
-            background: #8b4513;
-            top: 10px;
-            left: 0px;
-            border-radius: 50% 50% 0 0;
-            border: 4px solid #000;
-        }
-
-        .eyes {
-            position: absolute;
-            width: 25px;
-            height: 30px;
-            background: #fff;
-            border-radius: 50%;
-            top: 70px;
-            left: 35px;
-            border: 3px solid #000;
-            box-shadow: 55px 0 0 #fff;
-        }
-
-        .pupils {
-            position: absolute;
-            width: 12px;
-            height: 15px;
-            background: #000;
-            border-radius: 50%;
-            top: 78px;
-            left: 41px;
-            box-shadow: 55px 0 0 #000;
-        }
-
-        .mouth {
-            position: absolute;
-            width: 40px;
-            height: 20px;
-            border-bottom: 4px solid #000;
-            border-radius: 50%;
-            top: 115px;
-            left: 50px;
-        }
-
-        .body {
-            position: absolute;
-            width: 120px;
-            height: 100px;
-            background: #4169e1;
-            top: 160px;
-            left: 15px;
-            border: 4px solid #000;
-            border-radius: 30px;
-        }
-
-        .click-text {
-            font-size: 20px;
-            color: white;
-            font-weight: bold;
-            margin-top: 10px;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .click-counter {
-            font-size: 24px;
-            color: gold;
-            font-weight: bold;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 15px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 5px;
-            border: 2px solid white;
-        }
-
-        .rebirth-section {
-            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
-            border-radius: 30px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 4px solid gold;
-            text-align: center;
-        }
-
-        .rebirth-button {
-            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 20px;
-            border-radius: 30px;
-            border: 4px solid white;
-            cursor: pointer;
-            transition: transform 0.2s;
-            text-shadow: 2px 2px 0 #000;
-            width: 100%;
-        }
-
-        .rebirth-button:active {
-            transform: scale(0.95);
-        }
-
-        .rebirth-button.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-            background: #95a5a6;
-        }
-
-        .rebirth-bonus {
-            color: white;
-            font-size: 18px;
-            margin-top: 10px;
-            font-weight: bold;
-            text-shadow: 1px 1px 0 #000;
-        }
-
-        .fight-section {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 4px solid gold;
-        }
-
-        .fight-title {
-            color: gold;
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .enemy-info {
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: center;
-            border: 2px solid white;
-        }
-
-        .enemy-name {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .enemy-stats {
-            color: gold;
-            font-size: 20px;
-            margin: 10px 0;
-        }
-
-        .health-bar {
-            width: 100%;
-            height: 20px;
-            background: #333;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid white;
-        }
-
-        .health-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
-            width: 100%;
-            transition: width 0.3s;
-        }
-
-        .fight-button {
-            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 30px;
-            border: 3px solid white;
-            cursor: pointer;
-            transition: transform 0.2s;
-            text-shadow: 2px 2px 0 #000;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .fight-button:active {
-            transform: scale(0.95);
-        }
-
-        .fight-log {
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 10px;
-            border-radius: 15px;
-            margin-top: 15px;
-            font-size: 14px;
-            max-height: 80px;
-            overflow-y: auto;
-            border: 2px solid gold;
         }
 
         .shop-container {
@@ -397,78 +341,6 @@
             padding: 20px;
             border: 3px solid gold;
             margin-top: 20px;
-        }
-
-        .shop-title {
-            color: gold;
-            font-size: 28px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .shop-items {
-            display: grid;
-            gap: 10px;
-        }
-
-        .shop-item {
-            background: #fff;
-            border-radius: 15px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            border: 2px solid gold;
-        }
-
-        .shop-item:active {
-            transform: scale(0.98);
-        }
-
-        .item-icon {
-            font-size: 30px;
-            width: 50px;
-            height: 50px;
-            background: gold;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #000;
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .item-price {
-            font-size: 18px;
-            font-weight: bold;
-            color: gold;
-            text-shadow: 1px 1px 0 #000;
-        }
-
-        .reset-button {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
-            border: 3px solid white;
         }
     </style>
 </head>
@@ -479,75 +351,95 @@
             <div class="rebirth-info" id="rebirthInfo">Rebirth: 0 | Bonus: 1x</div>
         </div>
 
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="stat-label">STÄRKE</div>
-                <div class="stat-value" id="strength">1</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">COINS</div>
-                <div class="stat-value" id="coins">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">AUTO CLICKER</div>
-                <div class="stat-value" id="autoClickers">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">KLICK/S</div>
-                <div class="stat-value" id="clicksPerSecond">0</div>
-            </div>
+        <!-- Hauptmenü -->
+        <div class="main-menu">
+            <div class="menu-button active" id="mainMenuBtn">🏠 HAUPT</div>
+            <div class="menu-button" id="arenaMenuBtn">⚔️ ARENA</div>
         </div>
 
-        <div class="character-section">
-            <div class="character-area" id="clickArea">
-                <div class="character" id="character">
-                    <div class="blasen-character">
-                        <div class="hair"></div>
-                        <div class="head"></div>
-                        <div class="eyes"></div>
-                        <div class="pupils"></div>
-                        <div class="mouth"></div>
-                        <div class="body"></div>
-                    </div>
+        <!-- MAIN VIEW -->
+        <div class="main-view" id="mainView">
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-label">STÄRKE</div>
+                    <div class="stat-value" id="strength">1</div>
                 </div>
-                <div class="click-text">👆 TIPPEN 👆</div>
-                <div class="click-counter" id="clickCounter">0</div>
-            </div>
-
-            <!-- AUTO CLICKER TOGGLE BUTTON -->
-            <div class="auto-toggle-button" id="autoToggle">
-                <div class="auto-icon" id="autoIcon">🤚</div>
-                <div class="auto-status" id="autoStatus">AUS</div>
-                <div class="auto-speed" id="autoSpeed">0/Sek</div>
-            </div>
-        </div>
-
-        <div class="rebirth-section">
-            <div class="rebirth-button" id="rebirthButton">
-                🌟 REBIRTH 🌟
-            </div>
-            <div class="rebirth-bonus" id="rebirthProgress">
-                Noch 10000 Stärke bis Rebirth
-            </div>
-        </div>
-
-        <div class="fight-section">
-            <div class="fight-title">⚔️ ARENA ⚔️</div>
-            <div class="enemy-info">
-                <div class="enemy-name" id="enemyName">WILDES TIER</div>
-                <div class="enemy-stats" id="enemyStats">Stärke: 100 | Coins: 50</div>
-                <div class="health-bar">
-                    <div class="health-fill" id="enemyHealth" style="width: 100%"></div>
+                <div class="stat-box">
+                    <div class="stat-label">COINS</div>
+                    <div class="stat-value" id="coins">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">AUTO CLICKER</div>
+                    <div class="stat-value" id="autoClickers">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">KLICK/S</div>
+                    <div class="stat-value" id="clicksPerSecond">0</div>
                 </div>
             </div>
-            <button class="fight-button" id="fightButton">⚔️ KÄMPFEN ⚔️</button>
-            <div class="fight-log" id="fightLog">Willkommen in der Arena!</div>
+
+            <div class="character-section" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <div class="character-area" id="clickArea" style="flex: 2; background: #3498db; border-radius: 30px; padding: 15px; border: 4px solid gold; cursor: pointer;">
+                    <div style="font-size: 80px; text-align: center;">😎</div>
+                    <div class="click-text" style="text-align: center;">👆 TIPPEN 👆</div>
+                    <div class="click-counter" id="clickCounter" style="text-align: center;">0</div>
+                </div>
+
+                <div class="auto-toggle-button" id="autoToggle" style="flex: 1;">
+                    <div class="auto-icon" id="autoIcon">🤚</div>
+                    <div class="auto-status" id="autoStatus">AUS</div>
+                    <div class="auto-speed" id="autoSpeed">0/Sek</div>
+                </div>
+            </div>
+
+            <div class="shop-container">
+                <div class="shop-title" style="color: gold; font-size: 28px; text-align: center;">🛒 SHOP 🛒</div>
+                <div class="shop-items" id="shopItems"></div>
+                <button class="reset-button" id="resetButton" style="background: #e74c3c; color: white; padding: 15px; border-radius: 30px; width: 100%; margin-top: 15px;">🔄 NEUES SPIEL 🔄</button>
+            </div>
         </div>
 
-        <div class="shop-container">
-            <div class="shop-title">🛒 SHOP 🛒</div>
-            <div class="shop-items" id="shopItems"></div>
-            <button class="reset-button" id="resetButton">🔄 NEUES SPIEL 🔄</button>
+        <!-- ARENA VIEW -->
+        <div class="arena-view" id="arenaView">
+            <div class="arena-stats">
+                <div class="arena-stat">
+                    <div>❤️ LEBEN</div>
+                    <div id="arenaHealth">100</div>
+                </div>
+                <div class="arena-stat">
+                    <div>⚔️ STÄRKE</div>
+                    <div id="arenaStrength">1</div>
+                </div>
+                <div class="arena-stat">
+                    <div>🏆 SIEGE</div>
+                    <div id="arenaWins">0</div>
+                </div>
+            </div>
+
+            <div class="arena-canvas-container">
+                <canvas id="arenaCanvas" width="400" height="350"></canvas>
+            </div>
+
+            <div class="arena-controls">
+                <div class="arena-joystick" id="arenaJoystick">
+                    <div class="joystick-base"></div>
+                    <div class="joystick-handle" id="joystickHandle"></div>
+                </div>
+                <div class="arena-attack-button" id="arenaAttackButton">
+                    <div class="attack-icon">⚔️</div>
+                    <div class="attack-text">ANGREIFEN</div>
+                </div>
+            </div>
+
+            <div class="enemy-list" id="enemyList"></div>
+
+            <div class="tournament-info">
+                <div id="tournamentStatus">🏆 TURNIER: Runde 1/5</div>
+                <div id="tournamentReward">Gewinn: 2000 Stärke + Auto Clicker Boost</div>
+                <button class="tournament-button" id="startTournamentBtn">🏆 TURNIER STARTEN 🏆</button>
+            </div>
+
+            <div class="back-button" id="backFromArena">← ZURÜCK ZUM HAUPTSPIEL</div>
         </div>
     </div>
 
@@ -559,23 +451,31 @@
         let clickCount = 0;
         let rebirths = 0;
         let rebirthBonus = 1;
+        let arenaWins = 0;
         
-        // Auto Clicker Status
+        // Auto Clicker
         let autoClickerActive = false;
         let autoClickerInterval = null;
         
-        // Kampf Variablen
-        let currentEnemy = {
-            name: 'Wildes Tier',
-            strength: 100,
+        // Arena Variablen
+        let inArena = false;
+        let playerArena = {
+            x: 200,
+            y: 175,
             health: 100,
             maxHealth: 100,
-            coinReward: 50,
-            level: 1
+            attackCooldown: 0
         };
         
-        let fightLog = ['Willkommen in der Arena!'];
-        let inFight = false;
+        let arenaEnemies = [];
+        let currentEnemyIndex = 0;
+        let tournamentRound = 1;
+        let inTournament = false;
+        let tournamentEnemies = [];
+        
+        // Joystick
+        let joystickActive = false;
+        let joystickVector = { x: 0, y: 0 };
         
         // Shop Items
         let shopItems = [
@@ -625,29 +525,66 @@
         ];
 
         // DOM Elemente
+        const mainView = document.getElementById('mainView');
+        const arenaView = document.getElementById('arenaView');
+        const mainMenuBtn = document.getElementById('mainMenuBtn');
+        const arenaMenuBtn = document.getElementById('arenaMenuBtn');
+        const backFromArena = document.getElementById('backFromArena');
+        
         const clickArea = document.getElementById('clickArea');
         const strengthElement = document.getElementById('strength');
         const coinsElement = document.getElementById('coins');
         const autoClickersElement = document.getElementById('autoClickers');
         const clicksPerSecondElement = document.getElementById('clicksPerSecond');
-        const rebirthInfo = document.getElementById('rebirthInfo');
-        const clickCounterElement = document.getElementById('clickCounter');
         
-        // Auto Toggle Elemente
+        const arenaHealth = document.getElementById('arenaHealth');
+        const arenaStrength = document.getElementById('arenaStrength');
+        const arenaWinsElement = document.getElementById('arenaWins');
+        
         const autoToggle = document.getElementById('autoToggle');
         const autoIcon = document.getElementById('autoIcon');
         const autoStatus = document.getElementById('autoStatus');
         const autoSpeed = document.getElementById('autoSpeed');
         
-        const rebirthButton = document.getElementById('rebirthButton');
-        const rebirthProgress = document.getElementById('rebirthProgress');
-        const fightButton = document.getElementById('fightButton');
-        const enemyName = document.getElementById('enemyName');
-        const enemyStats = document.getElementById('enemyStats');
-        const enemyHealth = document.getElementById('enemyHealth');
-        const fightLogElement = document.getElementById('fightLog');
+        const arenaCanvas = document.getElementById('arenaCanvas');
+        const ctx = arenaCanvas.getContext('2d');
+        
+        const joystickHandle = document.getElementById('joystickHandle');
+        const arenaJoystick = document.getElementById('arenaJoystick');
+        const arenaAttackButton = document.getElementById('arenaAttackButton');
+        
+        const enemyList = document.getElementById('enemyList');
+        const startTournamentBtn = document.getElementById('startTournamentBtn');
+        const tournamentStatus = document.getElementById('tournamentStatus');
+        
         const shopContainer = document.getElementById('shopItems');
         const resetButton = document.getElementById('resetButton');
+
+        // Menü Navigation
+        mainMenuBtn.addEventListener('click', () => {
+            mainView.classList.remove('hidden');
+            arenaView.classList.remove('active');
+            mainMenuBtn.classList.add('active');
+            arenaMenuBtn.classList.remove('active');
+            inArena = false;
+        });
+
+        arenaMenuBtn.addEventListener('click', () => {
+            mainView.classList.add('hidden');
+            arenaView.classList.add('active');
+            mainMenuBtn.classList.remove('active');
+            arenaMenuBtn.classList.add('active');
+            inArena = true;
+            spawnArenaEnemies();
+        });
+
+        backFromArena.addEventListener('click', () => {
+            mainView.classList.remove('hidden');
+            arenaView.classList.remove('active');
+            mainMenuBtn.classList.add('active');
+            arenaMenuBtn.classList.remove('active');
+            inArena = false;
+        });
 
         // Click Event
         clickArea.addEventListener('click', (e) => {
@@ -655,28 +592,17 @@
             handleClick();
         });
 
-        clickArea.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handleClick();
-        });
-
         function handleClick() {
-            // Stärke erhöhen (mit Rebirth Bonus)
             strength += 1 * rebirthBonus;
-            
-            // Coins erhalten (alle 2 Tipps)
             clickCount++;
             if (clickCount % 2 === 0) {
                 coins += 1;
-                showAnimation('+1 🪙', '#ffd700');
             }
-            
             updateDisplay();
             updateShop();
-            checkRebirthAvailable();
         }
 
-        // AUTO CLICKER TOGGLE FUNKTION
+        // AUTO CLICKER
         autoToggle.addEventListener('click', () => {
             toggleAutoClicker();
         });
@@ -685,195 +611,362 @@
             autoClickerActive = !autoClickerActive;
             
             if (autoClickerActive) {
-                // AN - Grün
                 autoIcon.textContent = '👉';
                 autoStatus.textContent = 'AUTO-AN';
                 autoToggle.classList.add('active');
                 
-                // Vorhandenes Interval löschen
-                if (autoClickerInterval) {
-                    clearInterval(autoClickerInterval);
-                }
+                if (autoClickerInterval) clearInterval(autoClickerInterval);
                 
-                // NEU: Jede Sekunde automatisch klicken
                 autoClickerInterval = setInterval(() => {
-                    // So viele Klicks wie Auto Clicker vorhanden sind
                     for (let i = 0; i < autoClickers; i++) {
-                        handleClick(); // Das ist der automatische Klick!
+                        handleClick();
                     }
-                    showAnimation(`🤖 +${autoClickers}`, '#2ecc71');
                 }, 1000);
-                
             } else {
-                // AUS - Grau
                 autoIcon.textContent = '🤚';
                 autoStatus.textContent = 'AUS';
                 autoToggle.classList.remove('active');
                 
-                // Interval stoppen
                 if (autoClickerInterval) {
                     clearInterval(autoClickerInterval);
                     autoClickerInterval = null;
                 }
             }
-            
-            updateDisplay();
         }
 
-        // Rebirth System
-        function checkRebirthAvailable() {
-            if (strength >= 10000) {
-                rebirthButton.classList.remove('disabled');
-                rebirthProgress.textContent = '✨ REBIRTH BEREIT! ✨';
+        // ARENA FUNKTIONEN
+        function spawnArenaEnemies() {
+            arenaEnemies = [];
+            for (let i = 0; i < 5; i++) {
+                let enemyStrength = 50 + (i * 30) + (rebirths * 50);
+                arenaEnemies.push({
+                    id: i,
+                    name: `Gegner ${i + 1}`,
+                    x: 50 + Math.random() * 300,
+                    y: 50 + Math.random() * 250,
+                    strength: enemyStrength,
+                    health: 50 + (i * 30),
+                    maxHealth: 50 + (i * 30),
+                    speed: 1 + Math.random(),
+                    attackCooldown: 0,
+                    defeated: false
+                });
+            }
+            currentEnemyIndex = 0;
+            updateEnemyList();
+        }
+
+        function updateEnemyList() {
+            let html = '';
+            arenaEnemies.forEach((enemy, index) => {
+                if (!enemy.defeated) {
+                    let healthPercent = (enemy.health / enemy.maxHealth) * 100;
+                    html += `
+                        <div class="enemy-item ${index === currentEnemyIndex ? 'current' : ''}">
+                            <div>${enemy.name}</div>
+                            <div>⚔️ ${enemy.strength}</div>
+                            <div class="enemy-health-bar">
+                                <div class="enemy-health-fill" style="width: ${healthPercent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            enemyList.innerHTML = html;
+        }
+
+        // Joystick Steuerung
+        arenaJoystick.addEventListener('touchstart', handleJoystickStart);
+        arenaJoystick.addEventListener('touchmove', handleJoystickMove);
+        arenaJoystick.addEventListener('touchend', handleJoystickEnd);
+        arenaJoystick.addEventListener('mousedown', handleJoystickStart);
+        arenaJoystick.addEventListener('mousemove', handleJoystickMove);
+        arenaJoystick.addEventListener('mouseup', handleJoystickEnd);
+        arenaJoystick.addEventListener('mouseleave', handleJoystickEnd);
+
+        function handleJoystickStart(e) {
+            e.preventDefault();
+            joystickActive = true;
+        }
+
+        function handleJoystickMove(e) {
+            e.preventDefault();
+            if (!joystickActive) return;
+
+            const rect = arenaJoystick.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            let touchX, touchY;
+            
+            if (e.touches) {
+                touchX = e.touches[0].clientX;
+                touchY = e.touches[0].clientY;
             } else {
-                rebirthButton.classList.add('disabled');
-                rebirthProgress.textContent = `Noch ${10000 - strength} Stärke bis Rebirth`;
+                touchX = e.clientX;
+                touchY = e.clientY;
             }
-        }
 
-        rebirthButton.addEventListener('click', () => {
-            if (strength >= 10000) {
-                doRebirth();
+            let dx = touchX - centerX;
+            let dy = touchY - centerY;
+            
+            const maxDistance = 30;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > maxDistance) {
+                dx = (dx / distance) * maxDistance;
+                dy = (dy / distance) * maxDistance;
             }
-        });
-
-        function doRebirth() {
-            rebirths++;
-            rebirthBonus = rebirths + 1;
             
-            strength = 1;
-            coins = Math.floor(coins / 2);
-            
-            showAnimation(`✨ REBIRTH ${rebirths}! ✨`, '#9b59b6');
-            
-            updateDisplay();
-            checkRebirthAvailable();
-            rebirthInfo.textContent = `Rebirth: ${rebirths} | Bonus: ${rebirthBonus}x`;
+            joystickHandle.style.transform = `translate(${dx}px, ${dy}px)`;
+            joystickVector.x = dx / maxDistance;
+            joystickVector.y = dy / maxDistance;
         }
 
-        // Kampf System
-        function spawnEnemy() {
-            let baseStrength = 100 + (rebirths * 200);
-            let baseHealth = 100 + (rebirths * 200);
-            let baseReward = 50 + (rebirths * 100);
-            
-            let enemies = [
-                { name: '🐺 Wilder Wolf', strength: baseStrength, health: baseHealth, reward: baseReward },
-                { name: '🐻 Braunbär', strength: baseStrength * 1.5, health: baseHealth * 1.5, reward: baseReward * 1.5 },
-                { name: '🦁 Löwe', strength: baseStrength * 2, health: baseHealth * 2, reward: baseReward * 2 },
-                { name: '🐉 Drache', strength: baseStrength * 3, health: baseHealth * 3, reward: baseReward * 3 },
-                { name: '👹 Boss', strength: baseStrength * 5, health: baseHealth * 5, reward: baseReward * 5 }
-            ];
-            
-            let enemy = enemies[Math.floor(Math.random() * enemies.length)];
-            currentEnemy = {
-                name: enemy.name,
-                strength: Math.floor(enemy.strength),
-                health: Math.floor(enemy.health),
-                maxHealth: Math.floor(enemy.health),
-                coinReward: Math.floor(enemy.reward)
-            };
-            
-            updateEnemyDisplay();
+        function handleJoystickEnd(e) {
+            e.preventDefault();
+            joystickActive = false;
+            joystickVector.x = 0;
+            joystickVector.y = 0;
+            joystickHandle.style.transform = 'translate(0px, 0px)';
         }
 
-        function updateEnemyDisplay() {
-            enemyName.textContent = currentEnemy.name;
-            enemyStats.textContent = `Stärke: ${currentEnemy.strength} | Coins: ${currentEnemy.coinReward}`;
-            let healthPercent = (currentEnemy.health / currentEnemy.maxHealth) * 100;
-            enemyHealth.style.width = `${healthPercent}%`;
-        }
-
-        fightButton.addEventListener('click', () => {
-            if (!inFight) {
-                startFight();
+        // Attack Button
+        arenaAttackButton.addEventListener('click', () => {
+            if (playerArena.attackCooldown <= 0) {
+                attackEnemy();
             }
         });
 
-        function startFight() {
-            inFight = true;
-            fightButton.textContent = '⚔️ KÄMPFT ⚔️';
-            fightButton.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
-            
-            let fightInterval = setInterval(() => {
+        arenaAttackButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (playerArena.attackCooldown <= 0) {
+                attackEnemy();
+            }
+        });
+
+        function attackEnemy() {
+            let currentEnemy = arenaEnemies[currentEnemyIndex];
+            if (currentEnemy && !currentEnemy.defeated) {
+                let damage = Math.floor(strength / 5) + 10;
+                currentEnemy.health -= damage;
+                playerArena.attackCooldown = 20;
+                
                 if (currentEnemy.health <= 0) {
-                    clearInterval(fightInterval);
-                    winFight();
-                    return;
+                    currentEnemy.defeated = true;
+                    coins += 50 + (currentEnemyIndex * 20);
+                    
+                    // Nächsten Gegner finden
+                    let nextEnemy = arenaEnemies.findIndex(e => !e.defeated);
+                    if (nextEnemy !== -1) {
+                        currentEnemyIndex = nextEnemy;
+                    }
                 }
                 
-                if (strength <= 0) {
-                    clearInterval(fightInterval);
-                    loseFight();
-                    return;
+                updateEnemyList();
+            }
+        }
+
+        // Gegner Bewegung und Angriff
+        function updateArena() {
+            if (!inArena) return;
+
+            // Spieler Bewegung
+            if (joystickActive) {
+                playerArena.x += joystickVector.x * 3;
+                playerArena.y += joystickVector.y * 3;
+                
+                // In Canvas bleiben
+                playerArena.x = Math.max(20, Math.min(arenaCanvas.width - 20, playerArena.x));
+                playerArena.y = Math.max(20, Math.min(arenaCanvas.height - 20, playerArena.y));
+            }
+
+            // Gegner Bewegung und Angriff
+            arenaEnemies.forEach((enemy, index) => {
+                if (!enemy.defeated) {
+                    // Bewegung zum Spieler
+                    let dx = playerArena.x - enemy.x;
+                    let dy = playerArena.y - enemy.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance > 0) {
+                        enemy.x += (dx / distance) * enemy.speed;
+                        enemy.y += (dy / distance) * enemy.speed;
+                    }
+                    
+                    // Angriff
+                    if (distance < 40 && enemy.attackCooldown <= 0) {
+                        playerArena.health -= Math.floor(enemy.strength / 10);
+                        enemy.attackCooldown = 30;
+                        
+                        if (playerArena.health <= 0) {
+                            // Spieler besiegt
+                            playerArena.health = playerArena.maxHealth;
+                            spawnArenaEnemies();
+                        }
+                    }
+                    
+                    if (enemy.attackCooldown > 0) enemy.attackCooldown--;
+                }
+            });
+
+            if (playerArena.attackCooldown > 0) playerArena.attackCooldown--;
+
+            drawArena();
+            updateArenaDisplay();
+            requestAnimationFrame(updateArena);
+        }
+
+        function drawArena() {
+            ctx.clearRect(0, 0, arenaCanvas.width, arenaCanvas.height);
+            
+            // Boden
+            ctx.fillStyle = '#D2B48C';
+            ctx.fillRect(0, 0, arenaCanvas.width, arenaCanvas.height);
+            
+            // Arena Rand
+            ctx.strokeStyle = 'gold';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(5, 5, arenaCanvas.width - 10, arenaCanvas.height - 10);
+            
+            // Spieler zeichnen
+            ctx.fillStyle = '#3498db';
+            ctx.beginPath();
+            ctx.arc(playerArena.x, playerArena.y, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Spieler Gesundheit
+            ctx.fillStyle = '#27ae60';
+            ctx.fillRect(playerArena.x - 25, playerArena.y - 35, 50, 5);
+            
+            // Gegner zeichnen
+            arenaEnemies.forEach((enemy, index) => {
+                if (!enemy.defeated) {
+                    // Farbe basierend auf Gegner
+                    ctx.fillStyle = index === currentEnemyIndex ? '#e74c3c' : '#c0392b';
+                    ctx.beginPath();
+                    ctx.arc(enemy.x, enemy.y, 15, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Gesundheitsbalken
+                    let healthPercent = enemy.health / enemy.maxHealth;
+                    ctx.fillStyle = '#27ae60';
+                    ctx.fillRect(enemy.x - 20, enemy.y - 30, 40 * healthPercent, 4);
+                    
+                    // Stärke anzeigen
+                    ctx.fillStyle = 'white';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`⚔️${enemy.strength}`, enemy.x, enemy.y - 40);
+                }
+            });
+        }
+
+        function updateArenaDisplay() {
+            arenaHealth.textContent = playerArena.health;
+            arenaStrength.textContent = strength;
+            arenaWinsElement.textContent = arenaWins;
+        }
+
+        // TURNIER
+        startTournamentBtn.addEventListener('click', () => {
+            startTournament();
+        });
+
+        function startTournament() {
+            if (inTournament) return;
+            
+            inTournament = true;
+            tournamentRound = 1;
+            startTournamentBtn.textContent = '🏆 TURNIER LÄUFT... 🏆';
+            startTournamentBtn.classList.add('disabled');
+            
+            // Stärkere Gegner für Turnier
+            tournamentEnemies = [];
+            for (let i = 0; i < 5; i++) {
+                tournamentEnemies.push({
+                    strength: 200 + (i * 100) + (rebirths * 200),
+                    health: 100 + (i * 50),
+                    defeated: false
+                });
+            }
+            
+            // Turnier starten
+            fightTournamentRound();
+        }
+
+        function fightTournamentRound() {
+            if (tournamentRound > 5) {
+                // Turnier gewonnen
+                let reward = 2000;
+                strength += reward;
+                autoClickers += 5; // Auto Clicker Boost
+                arenaWins++;
+                
+                // Auto Clicker neu starten wenn aktiv
+                if (autoClickerActive) {
+                    toggleAutoClicker();
+                    toggleAutoClicker();
                 }
                 
-                let playerDamage = Math.floor(strength / 10) + 1;
-                let enemyDamage = Math.floor(currentEnemy.strength / 20) + 1;
+                alert(`🎉 TURNIER GEWONNEN! 🎉\n+2000 Stärke\n+5 Auto Clicker`);
                 
-                currentEnemy.health -= playerDamage;
-                strength -= enemyDamage;
+                inTournament = false;
+                startTournamentBtn.textContent = '🏆 TURNIER STARTEN 🏆';
+                startTournamentBtn.classList.remove('disabled');
+                tournamentStatus.textContent = '🏆 TURNIER: Gewonnen! 🏆';
                 
-                if (strength < 1) strength = 1;
-                
-                fightLog.unshift(`💥 Du machst ${playerDamage} Schaden! 👊 Gegner macht ${enemyDamage} Schaden!`);
-                if (fightLog.length > 5) fightLog.pop();
-                
-                updateEnemyDisplay();
+                spawnArenaEnemies();
                 updateDisplay();
-                
-            }, 1000);
+                return;
+            }
             
-            window.currentFightInterval = fightInterval;
-        }
-
-        function winFight() {
-            clearInterval(window.currentFightInterval);
+            tournamentStatus.textContent = `🏆 TURNIER: Runde ${tournamentRound}/5`;
             
-            let reward = currentEnemy.coinReward * rebirthBonus;
-            coins += reward;
+            // Turniergegner spawnen
+            let enemy = tournamentEnemies[tournamentRound - 1];
+            arenaEnemies = [{
+                id: 0,
+                name: `Turnier Gegner ${tournamentRound}`,
+                x: 300,
+                y: 175,
+                strength: enemy.strength,
+                health: enemy.health,
+                maxHealth: enemy.health,
+                speed: 2,
+                attackCooldown: 0,
+                defeated: false
+            }];
             
-            fightLog.unshift(`🎉 SIEG! +${reward} Coins! 🎉`);
-            spawnEnemy();
-            
-            inFight = false;
-            fightButton.textContent = '⚔️ NÄCHSTER KAMPF ⚔️';
-            fightButton.style.background = 'linear-gradient(135deg, #f1c40f 0%, #e67e22 100%)';
-            
-            updateDisplay();
-        }
-
-        function loseFight() {
-            clearInterval(window.currentFightInterval);
-            
-            fightLog.unshift(`😵 NIEDERLAGE! Du verlierst Coins...`);
-            coins = Math.floor(coins / 2);
-            spawnEnemy();
-            
-            inFight = false;
-            fightButton.textContent = '⚔️ NEUER KAMPF ⚔️';
-            fightButton.style.background = 'linear-gradient(135deg, #f1c40f 0%, #e67e22 100%)';
-            
-            updateDisplay();
+            currentEnemyIndex = 0;
+            updateEnemyList();
         }
 
         // Shop Funktionen
         function updateShop() {
             shopContainer.innerHTML = '';
-            
             shopItems.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = `shop-item ${item.level >= item.maxLevel ? 'disabled' : ''}`;
+                itemElement.style.background = '#fff';
+                itemElement.style.borderRadius = '15px';
+                itemElement.style.padding = '12px';
+                itemElement.style.marginBottom = '10px';
+                itemElement.style.display = 'flex';
+                itemElement.style.alignItems = 'center';
+                itemElement.style.gap = '10px';
+                itemElement.style.cursor = 'pointer';
+                itemElement.style.border = '2px solid gold';
                 
                 itemElement.innerHTML = `
-                    <div class="item-icon">${item.icon}</div>
-                    <div class="item-info">
-                        <div class="item-name">${item.name} (${item.level})</div>
+                    <div style="font-size:30px; width:50px; height:50px; background:gold; border-radius:15px; display:flex; align-items:center; justify-content:center;">${item.icon}</div>
+                    <div style="flex:1">
+                        <div style="font-weight:bold;">${item.name} (${item.level})</div>
                     </div>
-                    <div class="item-price">
-                        <span>${item.price}</span>
-                        <span>🪙</span>
-                    </div>
+                    <div style="font-size:18px; font-weight:bold; color:gold;">${item.price} 🪙</div>
                 `;
                 
                 itemElement.addEventListener('click', () => buyItem(index));
@@ -883,7 +976,6 @@
 
         function buyItem(index) {
             const item = shopItems[index];
-            
             if (coins >= item.price && item.level < item.maxLevel) {
                 coins -= item.price;
                 item.level++;
@@ -892,20 +984,24 @@
                     strength += 10;
                 } else if (item.type === 'auto') {
                     autoClickers += item.power;
-                    
-                    // Wenn Auto Clicker an ist, sofort neue Geschwindigkeit anzeigen
                     if (autoClickerActive) {
-                        toggleAutoClicker(); // Aus
-                        toggleAutoClicker(); // Wieder an mit neuer Geschwindigkeit
+                        toggleAutoClicker();
+                        toggleAutoClicker();
                     }
                 }
                 
                 item.price = Math.floor(item.basePrice * Math.pow(1.3, item.level));
-                
                 updateDisplay();
                 updateShop();
-                showAnimation('Gekauft! 🎉', '#27ae60');
             }
+        }
+
+        function updateDisplay() {
+            strengthElement.textContent = Math.floor(strength);
+            coinsElement.textContent = Math.floor(coins);
+            autoClickersElement.textContent = autoClickers;
+            clicksPerSecondElement.textContent = autoClickers;
+            autoSpeed.textContent = `${autoClickers}/Sek`;
         }
 
         // Animation
@@ -923,52 +1019,9 @@
             anim.style.zIndex = '1000';
             anim.style.animation = 'floatUp 1s ease-out forwards';
             document.body.appendChild(anim);
-            
             setTimeout(() => anim.remove(), 1000);
         }
 
-        // Display aktualisieren
-        function updateDisplay() {
-            strengthElement.textContent = Math.floor(strength);
-            coinsElement.textContent = Math.floor(coins);
-            autoClickersElement.textContent = autoClickers;
-            clicksPerSecondElement.textContent = autoClickers;
-            clickCounterElement.textContent = clickCount;
-            fightLogElement.innerHTML = fightLog.join('<br>');
-            
-            // Auto Speed anzeigen
-            autoSpeed.textContent = `${autoClickers}/Sek`;
-        }
-
-        // Spiel zurücksetzen
-        function resetGame() {
-            if (confirm('Wirklich neu starten?')) {
-                strength = 1;
-                coins = 0;
-                autoClickers = 0;
-                clickCount = 0;
-                rebirths = 0;
-                rebirthBonus = 1;
-                
-                // Auto Clicker ausschalten
-                if (autoClickerActive) {
-                    toggleAutoClicker();
-                }
-                
-                shopItems.forEach(item => {
-                    item.level = 0;
-                    item.price = item.basePrice;
-                });
-                
-                spawnEnemy();
-                updateDisplay();
-                updateShop();
-                checkRebirthAvailable();
-                rebirthInfo.textContent = `Rebirth: 0 | Bonus: 1x`;
-            }
-        }
-
-        // Styles für Animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes floatUp {
@@ -978,14 +1031,30 @@
         `;
         document.head.appendChild(style);
 
-        // Initialisierung
-        spawnEnemy();
+        // Spiel starten
         updateDisplay();
         updateShop();
-        checkRebirthAvailable();
-        rebirthButton.classList.add('disabled');
+        spawnArenaEnemies();
+        
+        // Arena Loop starten
+        setInterval(() => {
+            if (inArena) {
+                updateArenaDisplay();
+                
+                // Prüfen ob alle Gegner besiegt
+                let allDefeated = arenaEnemies.every(e => e.defeated);
+                if (allDefeated && inTournament) {
+                    tournamentRound++;
+                    fightTournamentRound();
+                } else if (allDefeated) {
+                    spawnArenaEnemies();
+                }
+            }
+        }, 100);
 
-        resetButton.addEventListener('click', resetGame);
-    </script>
-</body>
-</html>
+        // Arena Update starten
+        updateArena();
+
+        resetButton.addEventListener('click', () => {
+            if (confirm('Wirklich neu starten?')) {
+                strength = 1
