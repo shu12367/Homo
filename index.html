@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Blasen - Der Auto Clicker</title>
+    <title>BLASEN - Rebirth & Kämpfe</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,24 +27,34 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 40px;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             max-width: 500px;
             width: 100%;
-            border: 5px solid #fff;
+            border: 5px solid gold;
         }
 
         .header {
             text-align: center;
             margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            border-radius: 30px;
+            border: 3px solid white;
         }
 
         h1 {
-            color: #ff6b6b;
+            color: gold;
             font-size: 48px;
-            text-shadow: 3px 3px 0 #fff, 5px 5px 0 #000;
-            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #000, 5px 5px 0 purple;
+            margin-bottom: 5px;
             font-weight: bold;
-            letter-spacing: 2px;
+        }
+
+        .rebirth-info {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .stats-container {
@@ -55,8 +65,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
-            border: 3px solid #fff;
-            box-shadow: inset 0 -5px 0 #1a252f;
+            border: 3px solid gold;
         }
 
         .stat-box {
@@ -64,7 +73,7 @@
             border-radius: 20px;
             padding: 15px;
             text-align: center;
-            box-shadow: inset 0 -3px 0 #bdc3c7;
+            border: 2px solid gold;
         }
 
         .stat-label {
@@ -81,7 +90,7 @@
         }
 
         .stat-value#coins {
-            color: #f1c40f;
+            color: gold;
             text-shadow: 1px 1px 0 #000;
         }
 
@@ -89,40 +98,83 @@
             color: #e74c3c;
         }
 
+        .stat-value#rebirths {
+            color: #9b59b6;
+        }
+
+        .character-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
         .character-area {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            border-radius: 50px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 5px solid #fff;
+            border-radius: 30px;
+            padding: 15px;
+            border: 4px solid gold;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
+            transition: transform 0.1s;
             text-align: center;
-            box-shadow: 0 10px 0 #1a5276;
+            flex: 2;
         }
 
         .character-area:active {
-            transform: translateY(5px);
-            box-shadow: 0 5px 0 #1a5276;
+            transform: scale(0.98);
+        }
+
+        .auto-clicker-button {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            border-radius: 30px;
+            padding: 15px;
+            border: 4px solid gold;
+            cursor: pointer;
+            transition: transform 0.1s;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auto-clicker-button:active {
+            transform: scale(0.95);
+        }
+
+        .auto-clicker-button.active {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 0 20px #2ecc71;
+        }
+
+        .auto-icon {
+            font-size: 40px;
+        }
+
+        .auto-status {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 0 #000;
+            margin-top: 5px;
         }
 
         .character {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             margin: 0 auto;
             position: relative;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
         }
 
-        /* Character Design genau wie auf dem Foto */
+        /* Character Design */
         .blasen-character {
             width: 100%;
             height: 100%;
             position: relative;
+            transform: scale(0.7);
+            top: -20px;
         }
 
-        /* Kopf (rund) */
         .head {
             position: absolute;
             width: 140px;
@@ -130,115 +182,44 @@
             background: #f5deb3;
             border-radius: 50%;
             top: 20px;
-            left: 30px;
+            left: 5px;
             border: 4px solid #000;
-            box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1);
         }
 
-        /* Haar */
         .hair {
             position: absolute;
             width: 150px;
             height: 50px;
             background: #8b4513;
             top: 10px;
-            left: 25px;
+            left: 0px;
             border-radius: 50% 50% 0 0;
             border: 4px solid #000;
-            border-bottom: none;
         }
 
-        .hair-front {
-            position: absolute;
-            width: 60px;
-            height: 30px;
-            background: #8b4513;
-            top: 25px;
-            left: 70px;
-            border-radius: 50%;
-            border: 4px solid #000;
-            transform: rotate(10deg);
-        }
-
-        /* Augen */
-        .eye-left {
+        .eyes {
             position: absolute;
             width: 25px;
             height: 30px;
             background: #fff;
             border-radius: 50%;
             top: 70px;
-            left: 60px;
+            left: 35px;
             border: 3px solid #000;
+            box-shadow: 55px 0 0 #fff;
         }
 
-        .eye-right {
-            position: absolute;
-            width: 25px;
-            height: 30px;
-            background: #fff;
-            border-radius: 50%;
-            top: 70px;
-            left: 110px;
-            border: 3px solid #000;
-        }
-
-        .pupil-left {
+        .pupils {
             position: absolute;
             width: 12px;
             height: 15px;
             background: #000;
             border-radius: 50%;
             top: 78px;
-            left: 66px;
+            left: 41px;
+            box-shadow: 55px 0 0 #000;
         }
 
-        .pupil-right {
-            position: absolute;
-            width: 12px;
-            height: 15px;
-            background: #000;
-            border-radius: 50%;
-            top: 78px;
-            left: 116px;
-        }
-
-        /* Augenbrauen */
-        .eyebrow-left {
-            position: absolute;
-            width: 30px;
-            height: 8px;
-            background: #000;
-            top: 55px;
-            left: 55px;
-            border-radius: 10px;
-            transform: rotate(-5deg);
-        }
-
-        .eyebrow-right {
-            position: absolute;
-            width: 30px;
-            height: 8px;
-            background: #000;
-            top: 55px;
-            left: 105px;
-            border-radius: 10px;
-            transform: rotate(5deg);
-        }
-
-        /* Nase */
-        .nose {
-            position: absolute;
-            width: 15px;
-            height: 12px;
-            background: #d2691e;
-            border-radius: 40%;
-            top: 95px;
-            left: 92px;
-            border: 2px solid #000;
-        }
-
-        /* Mund */
         .mouth {
             position: absolute;
             width: 40px;
@@ -246,162 +227,178 @@
             border-bottom: 4px solid #000;
             border-radius: 50%;
             top: 115px;
-            left: 75px;
+            left: 50px;
         }
 
-        /* Körper */
         .body {
             position: absolute;
             width: 120px;
             height: 100px;
             background: #4169e1;
             top: 160px;
-            left: 40px;
-            border: 4px solid #000;
-            border-radius: 30px 30px 20px 20px;
-            box-shadow: inset -5px -5px 0 #1e3a8a;
-        }
-
-        /* Kragen */
-        .collar {
-            position: absolute;
-            width: 80px;
-            height: 20px;
-            background: #ffd700;
-            top: 150px;
-            left: 60px;
-            border: 3px solid #000;
-            border-radius: 10px;
-        }
-
-        /* Arme */
-        .arm-left {
-            position: absolute;
-            width: 30px;
-            height: 80px;
-            background: #4169e1;
-            top: 170px;
-            left: 20px;
-            border: 4px solid #000;
-            border-radius: 20px;
-            transform: rotate(10deg);
-            box-shadow: inset -3px -3px 0 #1e3a8a;
-        }
-
-        .arm-right {
-            position: absolute;
-            width: 30px;
-            height: 80px;
-            background: #4169e1;
-            top: 170px;
-            left: 150px;
-            border: 4px solid #000;
-            border-radius: 20px;
-            transform: rotate(-10deg);
-            box-shadow: inset -3px -3px 0 #1e3a8a;
-        }
-
-        /* Handschuhe */
-        .glove-left {
-            position: absolute;
-            width: 35px;
-            height: 35px;
-            background: #fff;
-            top: 235px;
             left: 15px;
             border: 4px solid #000;
-            border-radius: 50%;
-        }
-
-        .glove-right {
-            position: absolute;
-            width: 35px;
-            height: 35px;
-            background: #fff;
-            top: 235px;
-            left: 145px;
-            border: 4px solid #000;
-            border-radius: 50%;
-        }
-
-        /* Beine */
-        .leg-left {
-            position: absolute;
-            width: 35px;
-            height: 80px;
-            background: #2c3e50;
-            top: 250px;
-            left: 55px;
-            border: 4px solid #000;
-            border-radius: 0 0 20px 20px;
-        }
-
-        .leg-right {
-            position: absolute;
-            width: 35px;
-            height: 80px;
-            background: #2c3e50;
-            top: 250px;
-            left: 105px;
-            border: 4px solid #000;
-            border-radius: 0 0 20px 20px;
-        }
-
-        /* Schuhe */
-        .shoe-left {
-            position: absolute;
-            width: 45px;
-            height: 20px;
-            background: #000;
-            top: 325px;
-            left: 48px;
-            border: 3px solid #333;
-            border-radius: 10px;
-        }
-
-        .shoe-right {
-            position: absolute;
-            width: 45px;
-            height: 20px;
-            background: #000;
-            top: 325px;
-            left: 98px;
-            border: 3px solid #333;
-            border-radius: 10px;
+            border-radius: 30px;
         }
 
         .click-text {
-            font-size: 24px;
+            font-size: 20px;
             color: white;
             font-weight: bold;
-            margin-top: 220px;
-            text-shadow: 2px 2px 0 #000, 3px 3px 0 #000;
+            margin-top: 10px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .click-counter {
-            font-size: 36px;
-            color: #ffd700;
+            font-size: 24px;
+            color: gold;
             font-weight: bold;
             background: rgba(0,0,0,0.5);
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 5px 15px;
+            border-radius: 20px;
             display: inline-block;
+            margin-top: 5px;
+            border: 2px solid white;
+        }
+
+        .rebirth-section {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            border-radius: 30px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 4px solid gold;
+            text-align: center;
+        }
+
+        .rebirth-button {
+            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 30px;
+            border: 4px solid white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-shadow: 2px 2px 0 #000;
+            width: 100%;
+        }
+
+        .rebirth-button:active {
+            transform: scale(0.95);
+        }
+
+        .rebirth-button.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            background: #95a5a6;
+        }
+
+        .rebirth-bonus {
+            color: white;
+            font-size: 18px;
             margin-top: 10px;
-            border: 3px solid #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .fight-section {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 4px solid gold;
+        }
+
+        .fight-title {
+            color: gold;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .enemy-info {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid white;
+        }
+
+        .enemy-name {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .enemy-stats {
+            color: gold;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+            width: 100%;
+            transition: width 0.3s;
+        }
+
+        .fight-button {
+            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 30px;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-shadow: 2px 2px 0 #000;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .fight-button:active {
+            transform: scale(0.95);
+        }
+
+        .fight-log {
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            max-height: 80px;
+            overflow-y: auto;
+            border: 2px solid gold;
         }
 
         .shop-container {
             background: #2c3e50;
             border-radius: 30px;
             padding: 20px;
-            border: 3px solid #fff;
+            border: 3px solid gold;
             margin-top: 20px;
-            box-shadow: inset 0 -5px 0 #1a252f;
         }
 
         .shop-title {
-            color: #ffd700;
-            font-size: 32px;
+            color: gold;
+            font-size: 28px;
             text-align: center;
             margin-bottom: 15px;
             font-weight: bold;
@@ -410,43 +407,34 @@
 
         .shop-items {
             display: grid;
-            gap: 15px;
+            gap: 10px;
         }
 
         .shop-item {
             background: #fff;
-            border-radius: 20px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
-            border: 3px solid #ffd700;
-            box-shadow: inset 0 -3px 0 #b8860b;
+            border: 2px solid gold;
         }
 
         .shop-item:active {
-            transform: translateY(3px);
-            box-shadow: inset 0 0 0 #b8860b;
-        }
-
-        .shop-item.disabled {
-            opacity: 0.5;
-            pointer-events: none;
+            transform: scale(0.98);
         }
 
         .item-icon {
-            font-size: 40px;
-            width: 70px;
-            height: 70px;
-            background: #ffd700;
-            border-radius: 20px;
+            font-size: 30px;
+            width: 50px;
+            height: 50px;
+            background: gold;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2c3e50;
-            border: 3px solid #000;
+            border: 2px solid #000;
         }
 
         .item-info {
@@ -454,43 +442,15 @@
         }
 
         .item-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .item-desc {
-            font-size: 14px;
-            color: #7f8c8d;
         }
 
         .item-price {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
-            color: #f1c40f;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            text-shadow: 1px 1px 0 #000;
-        }
-
-        .owned-badge {
-            background: #27ae60;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            border: 2px solid #fff;
-        }
-
-        .upgrade-stats {
-            margin-top: 15px;
-            text-align: center;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
+            color: gold;
             text-shadow: 1px 1px 0 #000;
         }
 
@@ -500,40 +460,20 @@
             border: none;
             padding: 15px;
             border-radius: 30px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 15px;
             width: 100%;
-            border: 3px solid #fff;
-            box-shadow: inset 0 -5px 0 #c0392b;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .reset-button:active {
-            transform: translateY(5px);
-            box-shadow: inset 0 0 0 #c0392b;
-        }
-
-        @media (max-width: 400px) {
-            .character {
-                transform: scale(0.8);
-            }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 36px;
-            }
+            border: 3px solid white;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="header">
-            <h1>💫 BLASEN 💫</h1>
+            <h1>⚡ BLASEN ⚡</h1>
+            <div class="rebirth-info" id="rebirthInfo">Rebirth: 0 | Bonus: 1x</div>
         </div>
 
         <div class="stats-container">
@@ -550,75 +490,59 @@
                 <div class="stat-value" id="autoClickers">0</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label">PRO SEKUNDE</div>
-                <div class="stat-value" id="perSecond">0</div>
+                <div class="stat-label">REBIRTH</div>
+                <div class="stat-value" id="rebirths">0</div>
             </div>
         </div>
 
-        <div class="character-area" id="clickArea">
-            <div class="character" id="character">
-                <div class="blasen-character">
-                    <!-- Haar -->
-                    <div class="hair"></div>
-                    <div class="hair-front"></div>
-                    
-                    <!-- Kopf -->
-                    <div class="head"></div>
-                    
-                    <!-- Augenbrauen -->
-                    <div class="eyebrow-left"></div>
-                    <div class="eyebrow-right"></div>
-                    
-                    <!-- Augen -->
-                    <div class="eye-left"></div>
-                    <div class="eye-right"></div>
-                    <div class="pupil-left"></div>
-                    <div class="pupil-right"></div>
-                    
-                    <!-- Nase -->
-                    <div class="nose"></div>
-                    
-                    <!-- Mund -->
-                    <div class="mouth"></div>
-                    
-                    <!-- Kragen -->
-                    <div class="collar"></div>
-                    
-                    <!-- Körper -->
-                    <div class="body"></div>
-                    
-                    <!-- Arme -->
-                    <div class="arm-left"></div>
-                    <div class="arm-right"></div>
-                    
-                    <!-- Handschuhe -->
-                    <div class="glove-left"></div>
-                    <div class="glove-right"></div>
-                    
-                    <!-- Beine -->
-                    <div class="leg-left"></div>
-                    <div class="leg-right"></div>
-                    
-                    <!-- Schuhe -->
-                    <div class="shoe-left"></div>
-                    <div class="shoe-right"></div>
+        <div class="character-section">
+            <div class="character-area" id="clickArea">
+                <div class="character" id="character">
+                    <div class="blasen-character">
+                        <div class="hair"></div>
+                        <div class="head"></div>
+                        <div class="eyes"></div>
+                        <div class="pupils"></div>
+                        <div class="mouth"></div>
+                        <div class="body"></div>
+                    </div>
+                </div>
+                <div class="click-text">👆 TIPPEN 👆</div>
+                <div class="click-counter" id="clickCounter">0</div>
+            </div>
+
+            <div class="auto-clicker-button" id="autoClickerToggle">
+                <div class="auto-icon" id="autoIcon">⏹️</div>
+                <div class="auto-status" id="autoStatus">AUS</div>
+            </div>
+        </div>
+
+        <div class="rebirth-section">
+            <div class="rebirth-button" id="rebirthButton">
+                🌟 REBIRTH 🌟
+            </div>
+            <div class="rebirth-bonus" id="rebirthProgress">
+                Noch 10000 Stärke bis Rebirth
+            </div>
+        </div>
+
+        <div class="fight-section">
+            <div class="fight-title">⚔️ ARENA ⚔️</div>
+            <div class="enemy-info">
+                <div class="enemy-name" id="enemyName">WILDES TIER</div>
+                <div class="enemy-stats" id="enemyStats">Stärke: 100 | Coins: 50</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="enemyHealth" style="width: 100%"></div>
                 </div>
             </div>
-            <div class="click-text">👆 TIPPEN FÜR STÄRKE 👆</div>
-            <div class="click-counter" id="clickCounter">0</div>
+            <button class="fight-button" id="fightButton">⚔️ KÄMPFEN ⚔️</button>
+            <div class="fight-log" id="fightLog">Willkommen in der Arena!</div>
         </div>
 
         <div class="shop-container">
             <div class="shop-title">🛒 SHOP 🛒</div>
-            <div class="shop-items" id="shopItems">
-                <!-- Items werden per JS eingefügt -->
-            </div>
-            <div class="upgrade-stats" id="upgradeStats">
-                Nächstes Upgrade: 10 Coins
-            </div>
-            <button class="reset-button" id="resetButton">
-                🔄 NEUES SPIEL 🔄
-            </button>
+            <div class="shop-items" id="shopItems"></div>
+            <button class="reset-button" id="resetButton">🔄 NEUES SPIEL 🔄</button>
         </div>
     </div>
 
@@ -628,53 +552,72 @@
         let coins = 0;
         let autoClickers = 0;
         let clickCount = 0;
+        let rebirths = 0;
+        let rebirthBonus = 1;
+        
+        // Auto Clicker Status
+        let autoClickerActive = false;
+        let autoClickerInterval = null;
+        
+        // Kampf Variablen
+        let currentEnemy = {
+            name: 'Wildes Tier',
+            strength: 100,
+            health: 100,
+            maxHealth: 100,
+            coinReward: 50,
+            level: 1
+        };
+        
+        let fightLog = ['Willkommen in der Arena!'];
+        let inFight = false;
         
         // Shop Items
         let shopItems = [
             {
                 id: 'strength',
-                name: '💪 MEHR STÄRKE',
-                desc: 'Pro Tipp mehr Kraft',
+                name: '💪 STÄRKE +10',
+                desc: 'Permanent mehr Kraft',
                 icon: '💪',
                 basePrice: 10,
                 price: 10,
                 level: 0,
-                maxLevel: 100,
+                maxLevel: 1000,
                 type: 'strength'
             },
             {
                 id: 'auto1',
-                name: '🤖 AUTO CLICKER I',
-                desc: '1x pro Sekunde automatisch',
+                name: '🤖 AUTO CLICKER',
+                desc: '1x pro Sekunde',
                 icon: '🤖',
                 basePrice: 50,
                 price: 50,
                 level: 0,
-                maxLevel: 10,
+                maxLevel: 100,
                 type: 'auto',
                 power: 1
             },
             {
                 id: 'auto2',
-                name: '⚡ AUTO CLICKER II',
-                desc: '2x pro Sekunde automatisch',
+                name: '⚡ TURBO CLICKER',
+                desc: '2x pro Sekunde',
                 icon: '⚡',
                 basePrice: 200,
                 price: 200,
                 level: 0,
-                maxLevel: 10,
+                maxLevel: 100,
                 type: 'auto',
                 power: 2
             },
             {
                 id: 'auto3',
-                name: '🚀 AUTO CLICKER III',
-                desc: '5x pro Sekunde automatisch',
+                name: '🚀 MEGA CLICKER',
+                desc: '5x pro Sekunde',
                 icon: '🚀',
                 basePrice: 500,
                 price: 500,
                 level: 0,
-                maxLevel: 10,
+                maxLevel: 100,
                 type: 'auto',
                 power: 5
             }
@@ -685,10 +628,20 @@
         const strengthElement = document.getElementById('strength');
         const coinsElement = document.getElementById('coins');
         const autoClickersElement = document.getElementById('autoClickers');
-        const perSecondElement = document.getElementById('perSecond');
+        const rebirthsElement = document.getElementById('rebirths');
+        const rebirthInfo = document.getElementById('rebirthInfo');
         const clickCounterElement = document.getElementById('clickCounter');
+        const autoClickerToggle = document.getElementById('autoClickerToggle');
+        const autoIcon = document.getElementById('autoIcon');
+        const autoStatus = document.getElementById('autoStatus');
+        const rebirthButton = document.getElementById('rebirthButton');
+        const rebirthProgress = document.getElementById('rebirthProgress');
+        const fightButton = document.getElementById('fightButton');
+        const enemyName = document.getElementById('enemyName');
+        const enemyStats = document.getElementById('enemyStats');
+        const enemyHealth = document.getElementById('enemyHealth');
+        const fightLogElement = document.getElementById('fightLog');
         const shopContainer = document.getElementById('shopItems');
-        const upgradeStats = document.getElementById('upgradeStats');
         const resetButton = document.getElementById('resetButton');
 
         // Click Event
@@ -703,45 +656,212 @@
         });
 
         function handleClick() {
-            // Stärke erhöhen
-            strength += 1;
+            // Stärke erhöhen (mit Rebirth Bonus)
+            strength += 1 * rebirthBonus;
             
             // Coins erhalten (alle 2 Tipps)
             clickCount++;
             if (clickCount % 2 === 0) {
                 coins += 1;
-                showCoinAnimation();
+                showAnimation('+1 🪙', '#ffd700');
             }
             
-            // Stats aktualisieren
             updateDisplay();
-            
-            // Shop aktualisieren
             updateShop();
+            checkRebirthAvailable();
         }
 
-        // Coin Animation
-        function showCoinAnimation() {
-            const coin = document.createElement('div');
-            coin.textContent = '+1 🪙';
-            coin.style.position = 'fixed';
-            coin.style.left = '50%';
-            coin.style.top = '50%';
-            coin.style.transform = 'translate(-50%, -50%)';
-            coin.style.fontSize = '40px';
-            coin.style.fontWeight = 'bold';
-            coin.style.color = '#ffd700';
-            coin.style.textShadow = '2px 2px 0 #000, 3px 3px 0 #000';
-            coin.style.zIndex = '1000';
-            coin.style.animation = 'floatUp 1s ease-out forwards';
-            document.body.appendChild(coin);
+        // Auto Clicker Toggle
+        autoClickerToggle.addEventListener('click', () => {
+            toggleAutoClicker();
+        });
+
+        function toggleAutoClicker() {
+            autoClickerActive = !autoClickerActive;
             
-            setTimeout(() => {
-                coin.remove();
-            }, 1000);
+            if (autoClickerActive) {
+                autoIcon.textContent = '▶️';
+                autoStatus.textContent = 'AN';
+                autoClickerToggle.classList.add('active');
+                
+                // Auto Clicker starten
+                if (autoClickerInterval) clearInterval(autoClickerInterval);
+                autoClickerInterval = setInterval(() => {
+                    if (autoClickers > 0) {
+                        for (let i = 0; i < autoClickers; i++) {
+                            handleClick();
+                        }
+                    }
+                }, 1000);
+            } else {
+                autoIcon.textContent = '⏹️';
+                autoStatus.textContent = 'AUS';
+                autoClickerToggle.classList.remove('active');
+                
+                if (autoClickerInterval) {
+                    clearInterval(autoClickerInterval);
+                    autoClickerInterval = null;
+                }
+            }
         }
 
-        // Shop anzeigen
+        // Rebirth System
+        function checkRebirthAvailable() {
+            if (strength >= 10000) {
+                rebirthButton.classList.remove('disabled');
+                rebirthProgress.textContent = '✨ REBIRTH BEREIT! ✨';
+            } else {
+                rebirthButton.classList.add('disabled');
+                rebirthProgress.textContent = `Noch ${10000 - strength} Stärke bis Rebirth`;
+            }
+        }
+
+        rebirthButton.addEventListener('click', () => {
+            if (strength >= 10000) {
+                doRebirth();
+            }
+        });
+
+        function doRebirth() {
+            // Rebirth Bonus erhöhen
+            rebirths++;
+            rebirthBonus = rebirths + 1;
+            
+            // Stärke zurücksetzen (aber Basis behalten)
+            strength = 1;
+            
+            // Coins teilweise behalten
+            coins = Math.floor(coins / 2);
+            
+            // Auto Clicker bleiben
+            // Shop Items bleiben
+            
+            showAnimation(`✨ REBIRTH ${rebirths}! ✨`, '#9b59b6');
+            
+            updateDisplay();
+            checkRebirthAvailable();
+            rebirthInfo.textContent = `Rebirth: ${rebirths} | Bonus: ${rebirthBonus}x`;
+        }
+
+        // Kampf System
+        function spawnEnemy() {
+            let baseStrength = 100 + (rebirths * 200);
+            let baseHealth = 100 + (rebirths * 200);
+            let baseReward = 50 + (rebirths * 100);
+            
+            let enemies = [
+                { name: '🐺 Wilder Wolf', strength: baseStrength, health: baseHealth, reward: baseReward },
+                { name: '🐻 Braunbär', strength: baseStrength * 1.5, health: baseHealth * 1.5, reward: baseReward * 1.5 },
+                { name: '🦁 Löwe', strength: baseStrength * 2, health: baseHealth * 2, reward: baseReward * 2 },
+                { name: '🐉 Drache', strength: baseStrength * 3, health: baseHealth * 3, reward: baseReward * 3 },
+                { name: '👹 Boss', strength: baseStrength * 5, health: baseHealth * 5, reward: baseReward * 5 }
+            ];
+            
+            let enemy = enemies[Math.floor(Math.random() * enemies.length)];
+            currentEnemy = {
+                name: enemy.name,
+                strength: Math.floor(enemy.strength),
+                health: Math.floor(enemy.health),
+                maxHealth: Math.floor(enemy.health),
+                coinReward: Math.floor(enemy.reward)
+            };
+            
+            updateEnemyDisplay();
+        }
+
+        function updateEnemyDisplay() {
+            enemyName.textContent = currentEnemy.name;
+            enemyStats.textContent = `Stärke: ${currentEnemy.strength} | Coins: ${currentEnemy.coinReward}`;
+            let healthPercent = (currentEnemy.health / currentEnemy.maxHealth) * 100;
+            enemyHealth.style.width = `${healthPercent}%`;
+        }
+
+        fightButton.addEventListener('click', () => {
+            if (!inFight) {
+                startFight();
+            }
+        });
+
+        function startFight() {
+            inFight = true;
+            fightButton.textContent = '⚔️ KÄMPFT ⚔️';
+            fightButton.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            
+            // Kampf Loop
+            let fightInterval = setInterval(() => {
+                if (currentEnemy.health <= 0) {
+                    // Sieg
+                    clearInterval(fightInterval);
+                    winFight();
+                    return;
+                }
+                
+                if (strength <= 0) {
+                    // Niederlage (sollte nicht passieren)
+                    clearInterval(fightInterval);
+                    loseFight();
+                    return;
+                }
+                
+                // Kämpfen
+                let playerDamage = Math.floor(strength / 10) + 1;
+                let enemyDamage = Math.floor(currentEnemy.strength / 20) + 1;
+                
+                currentEnemy.health -= playerDamage;
+                strength -= enemyDamage;
+                
+                if (strength < 1) strength = 1;
+                
+                fightLog.unshift(`💥 Du machst ${playerDamage} Schaden! 👊 Gegner macht ${enemyDamage} Schaden!`);
+                if (fightLog.length > 5) fightLog.pop();
+                
+                updateEnemyDisplay();
+                updateDisplay();
+                
+            }, 1000);
+            
+            // Timeout speichern für spätere Nutzung
+            window.currentFightInterval = fightInterval;
+        }
+
+        function winFight() {
+            clearInterval(window.currentFightInterval);
+            
+            // Belohnung
+            let reward = currentEnemy.coinReward * rebirthBonus;
+            coins += reward;
+            
+            fightLog.unshift(`🎉 SIEG! +${reward} Coins! 🎉`);
+            
+            // Neuen Gegner spawnen
+            spawnEnemy();
+            
+            inFight = false;
+            fightButton.textContent = '⚔️ NÄCHSTER KAMPF ⚔️';
+            fightButton.style.background = 'linear-gradient(135deg, #f1c40f 0%, #e67e22 100%)';
+            
+            updateDisplay();
+        }
+
+        function loseFight() {
+            clearInterval(window.currentFightInterval);
+            
+            fightLog.unshift(`😵 NIEDERLAGE! Du verlierst Coins...`);
+            
+            // Strafe
+            coins = Math.floor(coins / 2);
+            
+            // Neuen Gegner spawnen
+            spawnEnemy();
+            
+            inFight = false;
+            fightButton.textContent = '⚔️ NEUER KAMPF ⚔️';
+            fightButton.style.background = 'linear-gradient(135deg, #f1c40f 0%, #e67e22 100%)';
+            
+            updateDisplay();
+        }
+
+        // Shop Funktionen
         function updateShop() {
             shopContainer.innerHTML = '';
             
@@ -752,8 +872,7 @@
                 itemElement.innerHTML = `
                     <div class="item-icon">${item.icon}</div>
                     <div class="item-info">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-desc">${item.desc} (Level ${item.level}/${item.maxLevel})</div>
+                        <div class="item-name">${item.name} (${item.level})</div>
                     </div>
                     <div class="item-price">
                         <span>${item.price}</span>
@@ -762,20 +881,10 @@
                 `;
                 
                 itemElement.addEventListener('click', () => buyItem(index));
-                
                 shopContainer.appendChild(itemElement);
             });
-            
-            // Nächstes Upgrade anzeigen
-            const nextItem = shopItems.find(item => item.level < item.maxLevel);
-            if (nextItem) {
-                upgradeStats.textContent = `Nächstes Upgrade: ${nextItem.name} - ${nextItem.price} Coins`;
-            } else {
-                upgradeStats.textContent = 'Alle Upgrades gekauft! 🎉';
-            }
         }
 
-        // Item kaufen
         function buyItem(index) {
             const item = shopItems[index];
             
@@ -783,171 +892,94 @@
                 coins -= item.price;
                 item.level++;
                 
-                // Effekt anwenden
                 if (item.type === 'strength') {
-                    strength += 10; // Extra Stärke beim Kauf
+                    strength += 10;
                 } else if (item.type === 'auto') {
                     autoClickers += item.power;
                 }
                 
-                // Preis erhöhen
-                item.price = Math.floor(item.basePrice * Math.pow(1.5, item.level));
+                item.price = Math.floor(item.basePrice * Math.pow(1.3, item.level));
                 
-                // Display updaten
                 updateDisplay();
                 updateShop();
-                
-                // Animation
-                showPurchaseAnimation();
+                showAnimation('Gekauft! 🎉', '#27ae60');
             }
         }
 
-        // Kauf Animation
-        function showPurchaseAnimation() {
-            const msg = document.createElement('div');
-            msg.textContent = 'Gekauft! 🎉';
-            msg.style.position = 'fixed';
-            msg.style.left = '50%';
-            msg.style.top = '40%';
-            msg.style.transform = 'translate(-50%, -50%)';
-            msg.style.fontSize = '30px';
-            msg.style.fontWeight = 'bold';
-            msg.style.color = '#27ae60';
-            msg.style.textShadow = '2px 2px 0 #000, 3px 3px 0 #000';
-            msg.style.zIndex = '1000';
-            msg.style.animation = 'floatUp 1s ease-out forwards';
-            document.body.appendChild(msg);
+        // Animation
+        function showAnimation(text, color) {
+            const anim = document.createElement('div');
+            anim.textContent = text;
+            anim.style.position = 'fixed';
+            anim.style.left = '50%';
+            anim.style.top = '50%';
+            anim.style.transform = 'translate(-50%, -50%)';
+            anim.style.fontSize = '30px';
+            anim.style.fontWeight = 'bold';
+            anim.style.color = color;
+            anim.style.textShadow = '2px 2px 0 #000';
+            anim.style.zIndex = '1000';
+            anim.style.animation = 'floatUp 1s ease-out forwards';
+            document.body.appendChild(anim);
             
-            setTimeout(() => {
-                msg.remove();
-            }, 1000);
-        }
-
-        // Auto Clicker Funktion
-        function autoClick() {
-            if (autoClickers > 0) {
-                // Pro Sekunde automatisch klicken
-                strength += autoClickers;
-                
-                // Auch Coins generieren (alle 2 automatischen Klicks)
-                for (let i = 0; i < autoClickers; i++) {
-                    clickCount++;
-                    if (clickCount % 2 === 0) {
-                        coins++;
-                    }
-                }
-                
-                updateDisplay();
-                updateShop();
-            }
+            setTimeout(() => anim.remove(), 1000);
         }
 
         // Display aktualisieren
         function updateDisplay() {
-            strengthElement.textContent = strength;
-            coinsElement.textContent = coins;
+            strengthElement.textContent = Math.floor(strength);
+            coinsElement.textContent = Math.floor(coins);
             autoClickersElement.textContent = autoClickers;
-            
-            // Klicks pro Sekunde berechnen
-            let perSecond = 0;
-            shopItems.forEach(item => {
-                if (item.type === 'auto') {
-                    perSecond += item.power * item.level;
-                }
-            });
-            perSecondElement.textContent = perSecond;
-            
+            rebirthsElement.textContent = rebirths;
             clickCounterElement.textContent = clickCount;
+            fightLogElement.innerHTML = fightLog.join('<br>');
         }
 
         // Spiel zurücksetzen
         function resetGame() {
-            if (confirm('Wirklich neu starten? Dein Fortschritt geht verloren!')) {
+            if (confirm('Wirklich neu starten?')) {
                 strength = 1;
                 coins = 0;
                 autoClickers = 0;
                 clickCount = 0;
+                rebirths = 0;
+                rebirthBonus = 1;
                 
-                // Shop zurücksetzen
-                shopItems = [
-                    {
-                        id: 'strength',
-                        name: '💪 MEHR STÄRKE',
-                        desc: 'Pro Tipp mehr Kraft',
-                        icon: '💪',
-                        basePrice: 10,
-                        price: 10,
-                        level: 0,
-                        maxLevel: 100,
-                        type: 'strength'
-                    },
-                    {
-                        id: 'auto1',
-                        name: '🤖 AUTO CLICKER I',
-                        desc: '1x pro Sekunde automatisch',
-                        icon: '🤖',
-                        basePrice: 50,
-                        price: 50,
-                        level: 0,
-                        maxLevel: 10,
-                        type: 'auto',
-                        power: 1
-                    },
-                    {
-                        id: 'auto2',
-                        name: '⚡ AUTO CLICKER II',
-                        desc: '2x pro Sekunde automatisch',
-                        icon: '⚡',
-                        basePrice: 200,
-                        price: 200,
-                        level: 0,
-                        maxLevel: 10,
-                        type: 'auto',
-                        power: 2
-                    },
-                    {
-                        id: 'auto3',
-                        name: '🚀 AUTO CLICKER III',
-                        desc: '5x pro Sekunde automatisch',
-                        icon: '🚀',
-                        basePrice: 500,
-                        price: 500,
-                        level: 0,
-                        maxLevel: 10,
-                        type: 'auto',
-                        power: 5
-                    }
-                ];
+                if (autoClickerActive) {
+                    toggleAutoClicker();
+                }
                 
+                shopItems.forEach(item => {
+                    item.level = 0;
+                    item.price = item.basePrice;
+                });
+                
+                spawnEnemy();
                 updateDisplay();
                 updateShop();
+                checkRebirthAvailable();
+                rebirthInfo.textContent = `Rebirth: 0 | Bonus: 1x`;
             }
         }
 
-        resetButton.addEventListener('click', resetGame);
-
-        // Animationen
+        // Styles für Animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes floatUp {
-                0% {
-                    opacity: 1;
-                    transform: translate(-50%, -50%);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translate(-50%, -150%);
-                }
+                0% { opacity: 1; transform: translate(-50%, -50%); }
+                100% { opacity: 0; transform: translate(-50%, -150%); }
             }
         `;
         document.head.appendChild(style);
 
-        // Auto Clicker Interval
-        setInterval(autoClick, 1000);
-
-        // Spiel starten
+        // Initialisierung
+        spawnEnemy();
         updateDisplay();
         updateShop();
+        checkRebirthAvailable();
+        rebirthButton.classList.add('disabled');
+
+        resetButton.addEventListener('click', resetGame);
     </script>
 </body>
 </html>
