@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BLASEN - Rebirth & Kämpfe</title>
+    <title>BLASEN - Auto Clicker Toggle</title>
     <style>
         * {
             margin: 0;
@@ -47,7 +47,6 @@
             font-size: 48px;
             text-shadow: 3px 3px 0 #000, 5px 5px 0 purple;
             margin-bottom: 5px;
-            font-weight: bold;
         }
 
         .rebirth-info {
@@ -98,10 +97,6 @@
             color: #e74c3c;
         }
 
-        .stat-value#rebirths {
-            color: #9b59b6;
-        }
-
         .character-section {
             display: flex;
             gap: 10px;
@@ -123,40 +118,49 @@
             transform: scale(0.98);
         }
 
-        .auto-clicker-button {
-            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+        /* AUTO CLICKER TOGGLE BUTTON */
+        .auto-toggle-button {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
             border-radius: 30px;
             padding: 15px;
             border: 4px solid gold;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.3s ease;
             text-align: center;
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 5px 0 #4a4a4a;
         }
 
-        .auto-clicker-button:active {
-            transform: scale(0.95);
-        }
-
-        .auto-clicker-button.active {
+        .auto-toggle-button.active {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            box-shadow: 0 0 20px #2ecc71;
+            box-shadow: 0 0 20px #2ecc71, 0 5px 0 #1e8449;
         }
 
         .auto-icon {
-            font-size: 40px;
+            font-size: 48px;
+            filter: drop-shadow(2px 2px 0 #000);
         }
 
         .auto-status {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: white;
-            text-shadow: 1px 1px 0 #000;
+            text-shadow: 2px 2px 0 #000;
             margin-top: 5px;
+        }
+
+        .auto-speed {
+            font-size: 14px;
+            color: white;
+            background: rgba(0,0,0,0.3);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+            border: 1px solid white;
         }
 
         .character {
@@ -166,7 +170,6 @@
             position: relative;
         }
 
-        /* Character Design */
         .blasen-character {
             width: 100%;
             height: 100%;
@@ -490,8 +493,8 @@
                 <div class="stat-value" id="autoClickers">0</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label">REBIRTH</div>
-                <div class="stat-value" id="rebirths">0</div>
+                <div class="stat-label">KLICK/S</div>
+                <div class="stat-value" id="clicksPerSecond">0</div>
             </div>
         </div>
 
@@ -511,9 +514,11 @@
                 <div class="click-counter" id="clickCounter">0</div>
             </div>
 
-            <div class="auto-clicker-button" id="autoClickerToggle">
-                <div class="auto-icon" id="autoIcon">⏹️</div>
+            <!-- AUTO CLICKER TOGGLE BUTTON -->
+            <div class="auto-toggle-button" id="autoToggle">
+                <div class="auto-icon" id="autoIcon">🤚</div>
                 <div class="auto-status" id="autoStatus">AUS</div>
+                <div class="auto-speed" id="autoSpeed">0/Sek</div>
             </div>
         </div>
 
@@ -577,7 +582,6 @@
             {
                 id: 'strength',
                 name: '💪 STÄRKE +10',
-                desc: 'Permanent mehr Kraft',
                 icon: '💪',
                 basePrice: 10,
                 price: 10,
@@ -588,7 +592,6 @@
             {
                 id: 'auto1',
                 name: '🤖 AUTO CLICKER',
-                desc: '1x pro Sekunde',
                 icon: '🤖',
                 basePrice: 50,
                 price: 50,
@@ -600,7 +603,6 @@
             {
                 id: 'auto2',
                 name: '⚡ TURBO CLICKER',
-                desc: '2x pro Sekunde',
                 icon: '⚡',
                 basePrice: 200,
                 price: 200,
@@ -612,7 +614,6 @@
             {
                 id: 'auto3',
                 name: '🚀 MEGA CLICKER',
-                desc: '5x pro Sekunde',
                 icon: '🚀',
                 basePrice: 500,
                 price: 500,
@@ -628,12 +629,16 @@
         const strengthElement = document.getElementById('strength');
         const coinsElement = document.getElementById('coins');
         const autoClickersElement = document.getElementById('autoClickers');
-        const rebirthsElement = document.getElementById('rebirths');
+        const clicksPerSecondElement = document.getElementById('clicksPerSecond');
         const rebirthInfo = document.getElementById('rebirthInfo');
         const clickCounterElement = document.getElementById('clickCounter');
-        const autoClickerToggle = document.getElementById('autoClickerToggle');
+        
+        // Auto Toggle Elemente
+        const autoToggle = document.getElementById('autoToggle');
         const autoIcon = document.getElementById('autoIcon');
         const autoStatus = document.getElementById('autoStatus');
+        const autoSpeed = document.getElementById('autoSpeed');
+        
         const rebirthButton = document.getElementById('rebirthButton');
         const rebirthProgress = document.getElementById('rebirthProgress');
         const fightButton = document.getElementById('fightButton');
@@ -671,8 +676,8 @@
             checkRebirthAvailable();
         }
 
-        // Auto Clicker Toggle
-        autoClickerToggle.addEventListener('click', () => {
+        // AUTO CLICKER TOGGLE FUNKTION
+        autoToggle.addEventListener('click', () => {
             toggleAutoClicker();
         });
 
@@ -680,29 +685,39 @@
             autoClickerActive = !autoClickerActive;
             
             if (autoClickerActive) {
-                autoIcon.textContent = '▶️';
-                autoStatus.textContent = 'AN';
-                autoClickerToggle.classList.add('active');
+                // AN - Grün
+                autoIcon.textContent = '👉';
+                autoStatus.textContent = 'AUTO-AN';
+                autoToggle.classList.add('active');
                 
-                // Auto Clicker starten
-                if (autoClickerInterval) clearInterval(autoClickerInterval);
+                // Vorhandenes Interval löschen
+                if (autoClickerInterval) {
+                    clearInterval(autoClickerInterval);
+                }
+                
+                // NEU: Jede Sekunde automatisch klicken
                 autoClickerInterval = setInterval(() => {
-                    if (autoClickers > 0) {
-                        for (let i = 0; i < autoClickers; i++) {
-                            handleClick();
-                        }
+                    // So viele Klicks wie Auto Clicker vorhanden sind
+                    for (let i = 0; i < autoClickers; i++) {
+                        handleClick(); // Das ist der automatische Klick!
                     }
+                    showAnimation(`🤖 +${autoClickers}`, '#2ecc71');
                 }, 1000);
-            } else {
-                autoIcon.textContent = '⏹️';
-                autoStatus.textContent = 'AUS';
-                autoClickerToggle.classList.remove('active');
                 
+            } else {
+                // AUS - Grau
+                autoIcon.textContent = '🤚';
+                autoStatus.textContent = 'AUS';
+                autoToggle.classList.remove('active');
+                
+                // Interval stoppen
                 if (autoClickerInterval) {
                     clearInterval(autoClickerInterval);
                     autoClickerInterval = null;
                 }
             }
+            
+            updateDisplay();
         }
 
         // Rebirth System
@@ -723,18 +738,11 @@
         });
 
         function doRebirth() {
-            // Rebirth Bonus erhöhen
             rebirths++;
             rebirthBonus = rebirths + 1;
             
-            // Stärke zurücksetzen (aber Basis behalten)
             strength = 1;
-            
-            // Coins teilweise behalten
             coins = Math.floor(coins / 2);
-            
-            // Auto Clicker bleiben
-            // Shop Items bleiben
             
             showAnimation(`✨ REBIRTH ${rebirths}! ✨`, '#9b59b6');
             
@@ -787,23 +795,19 @@
             fightButton.textContent = '⚔️ KÄMPFT ⚔️';
             fightButton.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
             
-            // Kampf Loop
             let fightInterval = setInterval(() => {
                 if (currentEnemy.health <= 0) {
-                    // Sieg
                     clearInterval(fightInterval);
                     winFight();
                     return;
                 }
                 
                 if (strength <= 0) {
-                    // Niederlage (sollte nicht passieren)
                     clearInterval(fightInterval);
                     loseFight();
                     return;
                 }
                 
-                // Kämpfen
                 let playerDamage = Math.floor(strength / 10) + 1;
                 let enemyDamage = Math.floor(currentEnemy.strength / 20) + 1;
                 
@@ -820,20 +824,16 @@
                 
             }, 1000);
             
-            // Timeout speichern für spätere Nutzung
             window.currentFightInterval = fightInterval;
         }
 
         function winFight() {
             clearInterval(window.currentFightInterval);
             
-            // Belohnung
             let reward = currentEnemy.coinReward * rebirthBonus;
             coins += reward;
             
             fightLog.unshift(`🎉 SIEG! +${reward} Coins! 🎉`);
-            
-            // Neuen Gegner spawnen
             spawnEnemy();
             
             inFight = false;
@@ -847,11 +847,7 @@
             clearInterval(window.currentFightInterval);
             
             fightLog.unshift(`😵 NIEDERLAGE! Du verlierst Coins...`);
-            
-            // Strafe
             coins = Math.floor(coins / 2);
-            
-            // Neuen Gegner spawnen
             spawnEnemy();
             
             inFight = false;
@@ -896,6 +892,12 @@
                     strength += 10;
                 } else if (item.type === 'auto') {
                     autoClickers += item.power;
+                    
+                    // Wenn Auto Clicker an ist, sofort neue Geschwindigkeit anzeigen
+                    if (autoClickerActive) {
+                        toggleAutoClicker(); // Aus
+                        toggleAutoClicker(); // Wieder an mit neuer Geschwindigkeit
+                    }
                 }
                 
                 item.price = Math.floor(item.basePrice * Math.pow(1.3, item.level));
@@ -930,9 +932,12 @@
             strengthElement.textContent = Math.floor(strength);
             coinsElement.textContent = Math.floor(coins);
             autoClickersElement.textContent = autoClickers;
-            rebirthsElement.textContent = rebirths;
+            clicksPerSecondElement.textContent = autoClickers;
             clickCounterElement.textContent = clickCount;
             fightLogElement.innerHTML = fightLog.join('<br>');
+            
+            // Auto Speed anzeigen
+            autoSpeed.textContent = `${autoClickers}/Sek`;
         }
 
         // Spiel zurücksetzen
@@ -945,6 +950,7 @@
                 rebirths = 0;
                 rebirthBonus = 1;
                 
+                // Auto Clicker ausschalten
                 if (autoClickerActive) {
                     toggleAutoClicker();
                 }
