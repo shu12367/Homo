@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Panda Ege - Der mächtige Panda</title>
+    <title>Blasen - Der Auto Clicker</title>
     <style>
         * {
             margin: 0;
@@ -15,1509 +15,637 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a3a 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            touch-action: none;
+            padding: 10px;
         }
 
         .game-container {
-            background: #8b5a2b;
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 5px solid #5d3a1a;
-            max-width: 1000px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 500px;
             width: 100%;
+            border: 5px solid #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         h1 {
-            color: #fff;
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 15px;
-            text-shadow: 3px 3px 0 #000;
+            color: #ff4757;
+            font-size: 42px;
+            text-shadow: 3px 3px 0 #fff;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
-        .stats-panel {
-            background: #4a2c1a;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 3px solid #6b4a2a;
-            color: white;
+        .stats-container {
+            background: #2f3542;
+            border-radius: 30px;
+            padding: 20px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            text-align: center;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            border: 3px solid #fff;
         }
 
-        .stat-item {
-            background: #2a1a0a;
-            padding: 10px;
-            border-radius: 15px;
-            border: 2px solid #8b6b4a;
+        .stat-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: inset 0 -3px 0 #ddd;
         }
 
         .stat-label {
             font-size: 14px;
-            color: #ffd700;
+            color: #747d8c;
             margin-bottom: 5px;
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
-            color: white;
+            color: #2f3542;
         }
 
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+        .stat-value#coins {
+            color: #ffa502;
         }
 
-        #gameCanvas {
-            border: 5px solid #3a2a1a;
-            border-radius: 20px;
-            background: #87CEEB;
-            display: block;
-            width: 100%;
-            max-width: 800px;
-            height: auto;
-            cursor: none;
-            touch-action: none;
+        .stat-value#strength {
+            color: #ff4757;
         }
 
-        .joystick-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            margin-top: 10px;
-        }
-
-        .joystick {
-            width: 120px;
-            height: 120px;
-            background: #4a4a4a;
-            border-radius: 60px;
-            position: relative;
-            border: 4px solid #2a2a2a;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            touch-action: none;
-        }
-
-        .joystick-knob {
-            width: 50px;
-            height: 50px;
-            background: #ff6b6b;
-            border-radius: 25px;
-            position: absolute;
-            top: 35px;
-            left: 35px;
-            border: 3px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            transition: 0.05s;
-            touch-action: none;
-        }
-
-        .attack-button {
-            width: 120px;
-            height: 120px;
-            background: #ff4444;
-            border-radius: 60px;
-            border: 4px solid #aa2222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 0 #aa2222;
-            box-shadow: inset 0 -5px 0 #aa2222;
-            touch-action: none;
+        .character-area {
+            background: #70a1ff;
+            border-radius: 50px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 5px solid #fff;
             cursor: pointer;
-            user-select: none;
-        }
-
-        .attack-button:active {
-            transform: translateY(5px);
-            box-shadow: inset 0 0 0 #aa2222;
-        }
-
-        .joystick-label {
+            transition: transform 0.1s;
             text-align: center;
+        }
+
+        .character-area:active {
+            transform: scale(0.95);
+        }
+
+        .character {
+            font-size: 120px;
+            line-height: 1;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .click-text {
+            font-size: 24px;
             color: white;
-            margin-top: 5px;
             font-weight: bold;
+            margin-top: 10px;
             text-shadow: 2px 2px 0 #000;
         }
 
-        @media (max-width: 600px) {
-            .stats-panel {
-                grid-template-columns: repeat(2, 1fr);
+        .click-counter {
+            font-size: 36px;
+            color: #fff;
+            font-weight: bold;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .shop-container {
+            background: #2f3542;
+            border-radius: 30px;
+            padding: 20px;
+            border: 3px solid #fff;
+        }
+
+        .shop-title {
+            color: #ffd32a;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .shop-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: #fff;
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            border: 2px solid #ffd32a;
+        }
+
+        .shop-item:active {
+            transform: scale(0.98);
+        }
+
+        .shop-item.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .item-icon {
+            font-size: 40px;
+            width: 60px;
+            height: 60px;
+            background: #ffd32a;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2f3542;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2f3542;
+            margin-bottom: 5px;
+        }
+
+        .item-desc {
+            font-size: 14px;
+            color: #747d8c;
+        }
+
+        .item-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffa502;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .owned-badge {
+            background: #4cd137;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .upgrade-stats {
+            margin-top: 15px;
+            text-align: center;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .reset-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            border: 3px solid #fff;
+        }
+
+        .reset-button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 400px) {
+            .character {
+                font-size: 100px;
             }
             
-            .joystick-container {
-                gap: 20px;
-            }
-            
-            .joystick, .attack-button {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .joystick-knob {
-                width: 40px;
-                height: 40px;
-                top: 30px;
-                left: 30px;
+            .stats-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🐼 PANDA EGE - DER MÄCHTIGE PANDA 🐼</h1>
-        
-        <div class="stats-panel">
-            <div class="stat-item">
-                <div class="stat-label">LEVEL</div>
-                <div class="stat-value" id="level">1</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">GRÖSSE</div>
-                <div class="stat-value" id="size">100%</div>
-            </div>
-            <div class="stat-item">
+        <div class="header">
+            <h1>💨 BLASEN 💨</h1>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
                 <div class="stat-label">STÄRKE</div>
-                <div class="stat-value" id="strength">10</div>
+                <div class="stat-value" id="strength">1</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-label">PUNKTE</div>
-                <div class="stat-value" id="score">0</div>
+            <div class="stat-box">
+                <div class="stat-label">COINS</div>
+                <div class="stat-value" id="coins">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">AUTO CLICKER</div>
+                <div class="stat-value" id="autoClickers">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">PRO SEKUNDE</div>
+                <div class="stat-value" id="perSecond">0</div>
             </div>
         </div>
 
-        <div class="game-area">
-            <canvas id="gameCanvas" width="800" height="500"></canvas>
-            
-            <div class="joystick-container">
-                <div>
-                    <div class="joystick" id="joystick">
-                        <div class="joystick-knob" id="joystickKnob"></div>
-                    </div>
-                    <div class="joystick-label">BEWEGEN</div>
-                </div>
-                <div>
-                    <div class="attack-button" id="attackButton">
-                        ⚔️
-                    </div>
-                    <div class="joystick-label">ANGREIFEN</div>
-                </div>
+        <div class="character-area" id="clickArea">
+            <div class="character" id="character">😤</div>
+            <div class="click-text">👆 TIPPEN FÜR STÄRKE 👆</div>
+            <div class="click-counter" id="clickCounter">0</div>
+        </div>
+
+        <div class="shop-container">
+            <div class="shop-title">🛒 SHOP 🛒</div>
+            <div class="shop-items" id="shopItems">
+                <!-- Items werden per JS eingefügt -->
             </div>
+            <div class="upgrade-stats" id="upgradeStats">
+                Nächstes Upgrade: 10 Coins
+            </div>
+            <button class="reset-button" id="resetButton">
+                🔄 NEUES SPIEL 🔄
+            </button>
         </div>
     </div>
 
     <script>
-        // Canvas Setup
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Joystick Variablen
-        const joystick = document.getElementById('joystick');
-        const joystickKnob = document.getElementById('joystickKnob');
-        const attackButton = document.getElementById('attackButton');
+        // Spielvariablen
+        let strength = 1;
+        let coins = 0;
+        let autoClickers = 0;
+        let clickCount = 0;
         
-        let joystickActive = false;
-        let joystickVector = { x: 0, y: 0 };
-        let attackPressed = false;
-
-        // Spieler Stats - Ege der Panda
-        let player = {
-            x: 400,
-            y: 250,
-            size: 30,  // Größer für besseren Panda
-            speed: 4,
-            level: 1,
-            strength: 15,
-            score: 0,
-            health: 150,
-            maxHealth: 150,
-            exp: 0,
-            expToNextLevel: 75,
-            // Panda-spezifische Eigenschaften
-            pandaType: 'Riesenpanda',
-            bambooEaten: 0
-        };
-
-        // Beute und Feinde
-        let prey = [];
-        let enemies = [];
-
-        // Spielzustand
-        let gameRunning = true;
-        let attackCooldown = 0;
-        let lastTime = 0;
-
-        // Joystick Event Listener
-        function handleJoystickStart(e) {
-            e.preventDefault();
-            joystickActive = true;
-        }
-
-        function handleJoystickMove(e) {
-            e.preventDefault();
-            if (!joystickActive) return;
-
-            const rect = joystick.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            let touchX, touchY;
-            
-            if (e.touches) {
-                touchX = e.touches[0].clientX;
-                touchY = e.touches[0].clientY;
-            } else {
-                touchX = e.clientX;
-                touchY = e.clientY;
+        // Shop Items
+        let shopItems = [
+            {
+                id: 'strength',
+                name: '💪 MEHR STÄRKE',
+                desc: 'Pro Tipp mehr Kraft',
+                icon: '💪',
+                basePrice: 10,
+                price: 10,
+                level: 0,
+                maxLevel: 100,
+                type: 'strength'
+            },
+            {
+                id: 'auto1',
+                name: '🤖 AUTO CLICKER I',
+                desc: '1x pro Sekunde automatisch',
+                icon: '🤖',
+                basePrice: 50,
+                price: 50,
+                level: 0,
+                maxLevel: 10,
+                type: 'auto',
+                power: 1
+            },
+            {
+                id: 'auto2',
+                name: '⚡ AUTO CLICKER II',
+                desc: '2x pro Sekunde automatisch',
+                icon: '⚡',
+                basePrice: 200,
+                price: 200,
+                level: 0,
+                maxLevel: 10,
+                type: 'auto',
+                power: 2
+            },
+            {
+                id: 'auto3',
+                name: '🚀 AUTO CLICKER III',
+                desc: '5x pro Sekunde automatisch',
+                icon: '🚀',
+                basePrice: 500,
+                price: 500,
+                level: 0,
+                maxLevel: 10,
+                type: 'auto',
+                power: 5
             }
+        ];
 
-            // Berechne Vektor vom Center zum Touchpunkt
-            let dx = touchX - centerX;
-            let dy = touchY - centerY;
-            
-            // Begrenze auf Joystick-Radius
-            const maxDistance = 35;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance > maxDistance) {
-                dx = (dx / distance) * maxDistance;
-                dy = (dy / distance) * maxDistance;
-            }
-            
-            // Bewege den Knopf
-            joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
-            
-            // Normalisiere den Vektor für Spielerbewegung
-            joystickVector.x = dx / maxDistance;
-            joystickVector.y = dy / maxDistance;
-        }
+        // DOM Elemente
+        const clickArea = document.getElementById('clickArea');
+        const strengthElement = document.getElementById('strength');
+        const coinsElement = document.getElementById('coins');
+        const autoClickersElement = document.getElementById('autoClickers');
+        const perSecondElement = document.getElementById('perSecond');
+        const clickCounterElement = document.getElementById('clickCounter');
+        const character = document.getElementById('character');
+        const shopContainer = document.getElementById('shopItems');
+        const upgradeStats = document.getElementById('upgradeStats');
+        const resetButton = document.getElementById('resetButton');
 
-        function handleJoystickEnd(e) {
+        // Click Event
+        clickArea.addEventListener('click', (e) => {
             e.preventDefault();
-            joystickActive = false;
-            joystickVector.x = 0;
-            joystickVector.y = 0;
-            joystickKnob.style.transform = 'translate(0px, 0px)';
-        }
-
-        // Attack Button Events
-        attackButton.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            attackPressed = true;
-        });
-        
-        attackButton.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            attackPressed = false;
-        });
-        
-        attackButton.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            attackPressed = true;
-        });
-        
-        attackButton.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            attackPressed = false;
-        });
-        
-        attackButton.addEventListener('mouseleave', (e) => {
-            attackPressed = false;
+            handleClick();
         });
 
-        // Joystick Events
-        joystick.addEventListener('touchstart', handleJoystickStart);
-        joystick.addEventListener('touchmove', handleJoystickMove);
-        joystick.addEventListener('touchend', handleJoystickEnd);
-        
-        joystick.addEventListener('mousedown', handleJoystickStart);
-        joystick.addEventListener('mousemove', handleJoystickMove);
-        joystick.addEventListener('mouseup', handleJoystickEnd);
-        joystick.addEventListener('mouseleave', handleJoystickEnd);
+        clickArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleClick();
+        });
 
-        // Tiere spawnen
-        function spawnCreatures() {
-            // Beute (kleine Tiere)
-            if (prey.length < 8 && Math.random() < 0.02) {
-                let size = 10 + Math.random() * 12;
-                let types = ['Hase', 'Fuchs', 'Reh', 'Waschbär'];
-                let colors = ['#A9A9A9', '#FF6347', '#8B4513', '#708090'];
-                let typeIndex = Math.floor(Math.random() * types.length);
-                
-                prey.push({
-                    x: Math.random() * (canvas.width - 50) + 25,
-                    y: Math.random() * (canvas.height - 50) + 25,
-                    size: size,
-                    speed: 0.8 + Math.random() * 1.5,
-                    health: Math.floor(size),
-                    type: 'prey',
-                    animalType: types[typeIndex],
-                    color: colors[typeIndex],
-                    worth: Math.floor(size * 2)
-                });
+        function handleClick() {
+            // Stärke erhöhen
+            strength += 1;
+            
+            // Coins erhalten (alle 2 Tipps)
+            clickCount++;
+            if (clickCount % 2 === 0) {
+                coins += 1;
+                showCoinAnimation();
             }
             
-            // Feinde (gefährliche Tiere)
-            if (enemies.length < 5 && Math.random() < 0.01) {
-                let size = 18 + Math.random() * 15;
-                let types = ['Tiger', 'Löwe', 'Bär', 'Wolf'];
-                let colors = ['#FF4500', '#FFD700', '#8B4513', '#696969'];
-                let typeIndex = Math.floor(Math.random() * types.length);
-                
-                enemies.push({
-                    x: Math.random() * (canvas.width - 60) + 30,
-                    y: Math.random() * (canvas.height - 60) + 30,
-                    size: size,
-                    speed: 0.4 + Math.random(),
-                    health: Math.floor(size * 1.8),
-                    damage: Math.floor(size / 1.5),
-                    type: 'enemy',
-                    animalType: types[typeIndex],
-                    color: colors[typeIndex],
-                    worth: Math.floor(size * 3)
-                });
-            }
-        }
-
-        // Bewegung mit Joystick
-        function movePlayer() {
-            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
-                player.x += joystickVector.x * player.speed;
-                player.y += joystickVector.y * player.speed;
-                
-                // Im Canvas bleiben
-                player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
-                player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
-            }
-        }
-
-        // Bewegung der Tiere
-        function moveCreatures() {
-            prey.forEach(animal => {
-                animal.x += (Math.random() - 0.5) * animal.speed * 2;
-                animal.y += (Math.random() - 0.5) * animal.speed * 2;
-                animal.x = Math.max(animal.size, Math.min(canvas.width - animal.size, animal.x));
-                animal.y = Math.max(animal.size, Math.min(canvas.height - animal.size, animal.y));
-            });
-
-            enemies.forEach(enemy => {
-                let dx = player.x - enemy.x;
-                let dy = player.y - enemy.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance > 0) {
-                    enemy.x += (dx / distance) * enemy.speed;
-                    enemy.y += (dy / distance) * enemy.speed;
-                }
-                
-                enemy.x = Math.max(enemy.size, Math.min(canvas.width - enemy.size, enemy.x));
-                enemy.y = Math.max(enemy.size, Math.min(canvas.height - enemy.size, enemy.y));
-            });
-        }
-
-        // Kampfsystem
-        function handleCombat() {
-            // Angriff
-            if (attackPressed && attackCooldown <= 0) {
-                attackCooldown = 8;
-                
-                // Beute angreifen
-                for (let i = prey.length - 1; i >= 0; i--) {
-                    let animal = prey[i];
-                    let dx = player.x - animal.x;
-                    let dy = player.y - animal.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < player.size + animal.size + 15) {
-                        animal.health -= player.strength;
-                        
-                        if (animal.health <= 0) {
-                            player.score += animal.worth;
-                            player.size += 0.3;
-                            player.exp += animal.worth;
-                            prey.splice(i, 1);
-                            
-                            // Level up
-                            if (player.exp >= player.expToNextLevel) {
-                                player.level++;
-                                player.strength += 8;
-                                player.exp = 0;
-                                player.expToNextLevel *= 1.6;
-                                player.maxHealth += 30;
-                                player.health = player.maxHealth;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-                // Feinde angreifen
-                for (let i = enemies.length - 1; i >= 0; i--) {
-                    let enemy = enemies[i];
-                    let dx = player.x - enemy.x;
-                    let dy = player.y - enemy.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < player.size + enemy.size + 20) {
-                        enemy.health -= player.strength;
-                        
-                        if (enemy.health <= 0) {
-                            player.score += enemy.worth;
-                            player.size += 0.8;
-                            player.exp += enemy.worth * 1.5;
-                            enemies.splice(i, 1);
-                            
-                            if (player.exp >= player.expToNextLevel) {
-                                player.level++;
-                                player.strength += 8;
-                                player.exp = 0;
-                                player.expToNextLevel *= 1.6;
-                                player.maxHealth += 30;
-                                player.health = player.maxHealth;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            
-            // Feinde greifen an
-            enemies.forEach(enemy => {
-                let dx = player.x - enemy.x;
-                let dy = player.y - enemy.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < player.size + enemy.size) {
-                    if (Math.random() < 0.02) {
-                        player.health -= enemy.damage;
-                        
-                        if (player.health <= 0) {
-                            gameRunning = false;
-                            setTimeout(() => {
-                                alert('Game Over! Panda Ege hat ' + player.score + ' Punkte erreicht!');
-                                resetGame();
-                            }, 100);
-                        }
-                    }
-                }
-            });
-            
-            if (attackCooldown > 0) attackCooldown--;
-        }
-
-        // Echten Panda zeichnen
-        function drawPanda(x, y, size) {
-            // Körper (hinterer Teil)
-            ctx.beginPath();
-            ctx.ellipse(x, y, size * 1.1, size * 0.9, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Bauch (weißer Bereich)
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.2, y, size * 0.8, size * 0.7, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFF';
-            ctx.fill();
-            
-            // Kopf
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.3, size * 0.8, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            // Gesicht (weiß)
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.4, size * 0.6, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFF';
-            ctx.fill();
-            
-            // Schwarze Augenringe
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.8, y - size * 0.5, size * 0.25, size * 0.2, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.2, y - size * 0.5, size * 0.25, size * 0.2, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            // Augen
-            ctx.fillStyle = '#FFF';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.8, y - size * 0.55, size * 0.08, 0, Math.PI * 2);
-            ctx.arc(x - size * 0.2, y - size * 0.55, size * 0.08, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.8, y - size * 0.55, size * 0.04, 0, Math.PI * 2);
-            ctx.arc(x - size * 0.2, y - size * 0.55, size * 0.04, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Nase
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.3, size * 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Ohren
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.9, y - size * 0.7, size * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(x - size * 0.1, y - size * 0.7, size * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Bambus im Maul (weil Panda)
-            ctx.fillStyle = '#00AA00';
-            ctx.fillRect(x - size * 0.4, y - size * 0.25, size * 0.3, size * 0.1);
-            ctx.fillStyle = '#008800';
-            ctx.fillRect(x - size * 0.35, y - size * 0.3, size * 0.05, size * 0.2);
-        }
-
-        // Zeichnen Funktion
-        function draw() {
-            // Himmel
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Waldboden
-            ctx.fillStyle = '#2d5a27';
-            ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-            
-            // Grashalme
-            ctx.strokeStyle = '#1a3a1a';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 20; i++) {
-                let x = (i * 40) + (Math.random() * 20);
-                ctx.beginPath();
-                ctx.moveTo(x, canvas.height - 50);
-                ctx.lineTo(x - 10, canvas.height - 70);
-                ctx.lineTo(x + 10, canvas.height - 90);
-                ctx.stroke();
-            }
-            
-            // Beute zeichnen
-            prey.forEach(animal => {
-                // Körper
-                ctx.beginPath();
-                ctx.ellipse(animal.x, animal.y, animal.size, animal.size * 0.8, 0, 0, Math.PI * 2);
-                ctx.fillStyle = animal.color;
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                
-                // Kopf
-                ctx.beginPath();
-                ctx.arc(animal.x + animal.size * 0.5, animal.y - animal.size * 0.3, animal.size * 0.5, 0, Math.PI * 2);
-                ctx.fillStyle = animal.color;
-                ctx.fill();
-                ctx.stroke();
-                
-                // Augen
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(animal.x + animal.size * 0.3, animal.y - animal.size * 0.4, animal.size * 0.1, 0, Math.PI * 2);
-                ctx.arc(animal.x + animal.size * 0.7, animal.y - animal.size * 0.4, animal.size * 0.1, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Gesundheitsbalken
-                ctx.fillStyle = '#00FF00';
-                ctx.fillRect(animal.x - animal.size, animal.y - animal.size - 15, 
-                           (animal.health / (animal.size)) * animal.size * 2, 5);
-            });
-            
-            // Feinde zeichnen
-            enemies.forEach(enemy => {
-                // Körper
-                ctx.beginPath();
-                ctx.ellipse(enemy.x, enemy.y, enemy.size, enemy.size * 0.9, 0, 0, Math.PI * 2);
-                ctx.fillStyle = enemy.color;
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                
-                // Kopf
-                ctx.beginPath();
-                ctx.arc(enemy.x - enemy.size * 0.3, enemy.y - enemy.size * 0.4, enemy.size * 0.6, 0, Math.PI * 2);
-                ctx.fillStyle = enemy.color;
-                ctx.fill();
-                ctx.stroke();
-                
-                // Böse Augen
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(enemy.x - enemy.size * 0.5, enemy.y - enemy.size * 0.6, enemy.size * 0.1, 0, Math.PI * 2);
-                ctx.arc(enemy.x - enemy.size * 0.1, enemy.y - enemy.size * 0.6, enemy.size * 0.1, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Augenbrauen (böse)
-                ctx.beginPath();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 3;
-                ctx.moveTo(enemy.x - enemy.size * 0.7, enemy.y - enemy.size * 0.8);
-                ctx.lineTo(enemy.x - enemy.size * 0.4, enemy.y - enemy.size * 0.7);
-                ctx.moveTo(enemy.x - enemy.size * 0.3, enemy.y - enemy.size * 0.8);
-                ctx.lineTo(enemy.x, enemy.y - enemy.size * 0.7);
-                ctx.stroke();
-                
-                // Gesundheitsbalken
-                ctx.fillStyle = '#FF0000';
-                ctx.fillRect(enemy.x - enemy.size, enemy.y - enemy.size - 20, 
-                           (enemy.health / (enemy.size * 1.8)) * enemy.size * 2, 5);
-            });
-            
-            // Panda Ege zeichnen (mit richtiger Panda-Darstellung)
-            drawPanda(player.x, player.y, player.size);
-            
-            // Gesundheitsbalken Spieler
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(20, 20, (player.health / player.maxHealth) * 200, 25);
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(20, 20, 200, 25);
-            ctx.fillStyle = '#FFF';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText(`❤️ ${Math.floor(player.health)}/${player.maxHealth}`, 25, 40);
+            // Character ändern je nach Stärke
+            updateCharacter();
             
             // Stats aktualisieren
-            document.getElementById('level').textContent = player.level;
-            document.getElementById('size').textContent = Math.round((player.size / 30) * 100) + '%';
-            document.getElementById('strength').textContent = player.strength;
-            document.getElementById('score').textContent = player.score;
+            updateDisplay();
+            
+            // Shop aktualisieren
+            updateShop();
+        }
+
+        // Coin Animation
+        function showCoinAnimation() {
+            const coin = document.createElement('div');
+            coin.textContent = '+1 🪙';
+            coin.style.position = 'fixed';
+            coin.style.left = '50%';
+            coin.style.top = '50%';
+            coin.style.transform = 'translate(-50%, -50%)';
+            coin.style.fontSize = '40px';
+            coin.style.fontWeight = 'bold';
+            coin.style.color = '#ffd32a';
+            coin.style.textShadow = '2px 2px 0 #000';
+            coin.style.zIndex = '1000';
+            coin.style.animation = 'floatUp 1s ease-out forwards';
+            document.body.appendChild(coin);
+            
+            setTimeout(() => {
+                coin.remove();
+            }, 1000);
+        }
+
+        // Character updaten
+        function updateCharacter() {
+            if (strength < 50) {
+                character.textContent = '😤';
+            } else if (strength < 200) {
+                character.textContent = '😠';
+            } else if (strength < 500) {
+                character.textContent = '👊';
+            } else if (strength < 1000) {
+                character.textContent = '💪';
+            } else {
+                character.textContent = '🦾';
+            }
+        }
+
+        // Shop anzeigen
+        function updateShop() {
+            shopContainer.innerHTML = '';
+            
+            shopItems.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = `shop-item ${item.level >= item.maxLevel ? 'disabled' : ''}`;
+                
+                itemElement.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-desc">${item.desc} (Level ${item.level}/${item.maxLevel})</div>
+                    </div>
+                    <div class="item-price">
+                        <span>${item.price}</span>
+                        <span>🪙</span>
+                    </div>
+                `;
+                
+                itemElement.addEventListener('click', () => buyItem(index));
+                
+                shopContainer.appendChild(itemElement);
+            });
+            
+            // Nächstes Upgrade anzeigen
+            const nextItem = shopItems.find(item => item.level < item.maxLevel);
+            if (nextItem) {
+                upgradeStats.textContent = `Nächstes Upgrade: ${nextItem.name} - ${nextItem.price} Coins`;
+            } else {
+                upgradeStats.textContent = 'Alle Upgrades gekauft! 🎉';
+            }
+        }
+
+        // Item kaufen
+        function buyItem(index) {
+            const item = shopItems[index];
+            
+            if (coins >= item.price && item.level < item.maxLevel) {
+                coins -= item.price;
+                item.level++;
+                
+                // Effekt anwenden
+                if (item.type === 'strength') {
+                    strength += 10; // Extra Stärke beim Kauf
+                } else if (item.type === 'auto') {
+                    autoClickers += item.power;
+                }
+                
+                // Preis erhöhen
+                item.price = Math.floor(item.basePrice * Math.pow(1.5, item.level));
+                
+                // Display updaten
+                updateDisplay();
+                updateShop();
+                
+                // Animation
+                showPurchaseAnimation();
+            }
+        }
+
+        // Kauf Animation
+        function showPurchaseAnimation() {
+            const msg = document.createElement('div');
+            msg.textContent = 'Gekauft! 🎉';
+            msg.style.position = 'fixed';
+            msg.style.left = '50%';
+            msg.style.top = '40%';
+            msg.style.transform = 'translate(-50%, -50%)';
+            msg.style.fontSize = '30px';
+            msg.style.fontWeight = 'bold';
+            msg.style.color = '#4cd137';
+            msg.style.textShadow = '2px 2px 0 #000';
+            msg.style.zIndex = '1000';
+            msg.style.animation = 'floatUp 1s ease-out forwards';
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.remove();
+            }, 1000);
+        }
+
+        // Auto Clicker Funktion
+        function autoClick() {
+            if (autoClickers > 0) {
+                // Pro Sekunde automatisch klicken
+                strength += autoClickers;
+                
+                // Auch Coins generieren (alle 2 automatischen Klicks)
+                for (let i = 0; i < autoClickers; i++) {
+                    clickCount++;
+                    if (clickCount % 2 === 0) {
+                        coins++;
+                    }
+                }
+                
+                updateDisplay();
+                updateCharacter();
+                updateShop();
+            }
+        }
+
+        // Display aktualisieren
+        function updateDisplay() {
+            strengthElement.textContent = strength;
+            coinsElement.textContent = coins;
+            autoClickersElement.textContent = autoClickers;
+            
+            // Klicks pro Sekunde berechnen
+            let perSecond = 0;
+            shopItems.forEach(item => {
+                if (item.type === 'auto') {
+                    perSecond += item.power * item.level;
+                }
+            });
+            perSecondElement.textContent = perSecond;
+            
+            clickCounterElement.textContent = clickCount;
         }
 
         // Spiel zurücksetzen
         function resetGame() {
-            player = {
-                x: 400,
-                y: 250,
-                size: 30,
-                speed: 4,
-                level: 1,
-                strength: 15,
-                score: 0,
-                health: 150,
-                maxHealth: 150,
-                exp: 0,
-                expToNextLevel: 75,
-                bambooEaten: 0
-            };
-            prey = [];
-            enemies = [];
-            gameRunning = true;
-        }
-
-        // Hauptspiel-Schleife
-        function gameLoop() {
-            if (gameRunning) {
-                movePlayer();
-                spawnCreatures();
-                moveCreatures();
-                handleCombat();
-                draw();
+            if (confirm('Wirklich neu starten? Dein Fortschritt geht verloren!')) {
+                strength = 1;
+                coins = 0;
+                autoClickers = 0;
+                clickCount = 0;
+                
+                // Shop zurücksetzen
+                shopItems = [
+                    {
+                        id: 'strength',
+                        name: '💪 MEHR STÄRKE',
+                        desc: 'Pro Tipp mehr Kraft',
+                        icon: '💪',
+                        basePrice: 10,
+                        price: 10,
+                        level: 0,
+                        maxLevel: 100,
+                        type: 'strength'
+                    },
+                    {
+                        id: 'auto1',
+                        name: '🤖 AUTO CLICKER I',
+                        desc: '1x pro Sekunde automatisch',
+                        icon: '🤖',
+                        basePrice: 50,
+                        price: 50,
+                        level: 0,
+                        maxLevel: 10,
+                        type: 'auto',
+                        power: 1
+                    },
+                    {
+                        id: 'auto2',
+                        name: '⚡ AUTO CLICKER II',
+                        desc: '2x pro Sekunde automatisch',
+                        icon: '⚡',
+                        basePrice: 200,
+                        price: 200,
+                        level: 0,
+                        maxLevel: 10,
+                        type: 'auto',
+                        power: 2
+                    },
+                    {
+                        id: 'auto3',
+                        name: '🚀 AUTO CLICKER III',
+                        desc: '5x pro Sekunde automatisch',
+                        icon: '🚀',
+                        basePrice: 500,
+                        price: 500,
+                        level: 0,
+                        maxLevel: 10,
+                        type: 'auto',
+                        power: 5
+                    }
+                ];
+                
+                character.textContent = '😤';
+                updateDisplay();
+                updateShop();
             }
-            requestAnimationFrame(gameLoop);
         }
 
-        // Verhindere Scrollen auf der ganzen Seite
-        document.body.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
+        resetButton.addEventListener('click', resetGame);
 
-        document.body.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-        }, { passive: false });
+        // Animationen
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                0% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translate(-50%, -150%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Auto Clicker Interval
+        setInterval(autoClick, 1000);
 
         // Spiel starten
-        gameLoop();
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Panda Ege - Der mächtige Panda</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a3a 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: none;
-        }
-
-        .game-container {
-            background: #8b5a2b;
-            border-radius: 30px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 5px solid #5d3a1a;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #fff;
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 15px;
-            text-shadow: 3px 3px 0 #000;
-            font-weight: bold;
-        }
-
-        .stats-panel {
-            background: #4a2c1a;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 3px solid #6b4a2a;
-            color: white;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            text-align: center;
-        }
-
-        .stat-item {
-            background: #2a1a0a;
-            padding: 10px;
-            border-radius: 15px;
-            border: 2px solid #8b6b4a;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #ffd700;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        #gameCanvas {
-            border: 5px solid #3a2a1a;
-            border-radius: 20px;
-            background: #87CEEB;
-            display: block;
-            width: 100%;
-            max-width: 800px;
-            height: auto;
-            cursor: none;
-            touch-action: none;
-        }
-
-        .joystick-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            margin-top: 10px;
-        }
-
-        .joystick {
-            width: 120px;
-            height: 120px;
-            background: #4a4a4a;
-            border-radius: 60px;
-            position: relative;
-            border: 4px solid #2a2a2a;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            touch-action: none;
-        }
-
-        .joystick-knob {
-            width: 50px;
-            height: 50px;
-            background: #ff6b6b;
-            border-radius: 25px;
-            position: absolute;
-            top: 35px;
-            left: 35px;
-            border: 3px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            transition: 0.05s;
-            touch-action: none;
-        }
-
-        .attack-button {
-            width: 120px;
-            height: 120px;
-            background: #ff4444;
-            border-radius: 60px;
-            border: 4px solid #aa2222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 0 #aa2222;
-            box-shadow: inset 0 -5px 0 #aa2222;
-            touch-action: none;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .attack-button:active {
-            transform: translateY(5px);
-            box-shadow: inset 0 0 0 #aa2222;
-        }
-
-        .joystick-label {
-            text-align: center;
-            color: white;
-            margin-top: 5px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        @media (max-width: 600px) {
-            .stats-panel {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .joystick-container {
-                gap: 20px;
-            }
-            
-            .joystick, .attack-button {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .joystick-knob {
-                width: 40px;
-                height: 40px;
-                top: 30px;
-                left: 30px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <h1>🐼 PANDA EGE - DER MÄCHTIGE PANDA 🐼</h1>
-        
-        <div class="stats-panel">
-            <div class="stat-item">
-                <div class="stat-label">LEVEL</div>
-                <div class="stat-value" id="level">1</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">GRÖSSE</div>
-                <div class="stat-value" id="size">100%</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">STÄRKE</div>
-                <div class="stat-value" id="strength">10</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">PUNKTE</div>
-                <div class="stat-value" id="score">0</div>
-            </div>
-        </div>
-
-        <div class="game-area">
-            <canvas id="gameCanvas" width="800" height="500"></canvas>
-            
-            <div class="joystick-container">
-                <div>
-                    <div class="joystick" id="joystick">
-                        <div class="joystick-knob" id="joystickKnob"></div>
-                    </div>
-                    <div class="joystick-label">BEWEGEN</div>
-                </div>
-                <div>
-                    <div class="attack-button" id="attackButton">
-                        ⚔️
-                    </div>
-                    <div class="joystick-label">ANGREIFEN</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Canvas Setup
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Joystick Variablen
-        const joystick = document.getElementById('joystick');
-        const joystickKnob = document.getElementById('joystickKnob');
-        const attackButton = document.getElementById('attackButton');
-        
-        let joystickActive = false;
-        let joystickVector = { x: 0, y: 0 };
-        let attackPressed = false;
-
-        // Spieler Stats - Ege der Panda
-        let player = {
-            x: 400,
-            y: 250,
-            size: 30,  // Größer für besseren Panda
-            speed: 4,
-            level: 1,
-            strength: 15,
-            score: 0,
-            health: 150,
-            maxHealth: 150,
-            exp: 0,
-            expToNextLevel: 75,
-            // Panda-spezifische Eigenschaften
-            pandaType: 'Riesenpanda',
-            bambooEaten: 0
-        };
-
-        // Beute und Feinde
-        let prey = [];
-        let enemies = [];
-
-        // Spielzustand
-        let gameRunning = true;
-        let attackCooldown = 0;
-        let lastTime = 0;
-
-        // Joystick Event Listener
-        function handleJoystickStart(e) {
-            e.preventDefault();
-            joystickActive = true;
-        }
-
-        function handleJoystickMove(e) {
-            e.preventDefault();
-            if (!joystickActive) return;
-
-            const rect = joystick.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            let touchX, touchY;
-            
-            if (e.touches) {
-                touchX = e.touches[0].clientX;
-                touchY = e.touches[0].clientY;
-            } else {
-                touchX = e.clientX;
-                touchY = e.clientY;
-            }
-
-            // Berechne Vektor vom Center zum Touchpunkt
-            let dx = touchX - centerX;
-            let dy = touchY - centerY;
-            
-            // Begrenze auf Joystick-Radius
-            const maxDistance = 35;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance > maxDistance) {
-                dx = (dx / distance) * maxDistance;
-                dy = (dy / distance) * maxDistance;
-            }
-            
-            // Bewege den Knopf
-            joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
-            
-            // Normalisiere den Vektor für Spielerbewegung
-            joystickVector.x = dx / maxDistance;
-            joystickVector.y = dy / maxDistance;
-        }
-
-        function handleJoystickEnd(e) {
-            e.preventDefault();
-            joystickActive = false;
-            joystickVector.x = 0;
-            joystickVector.y = 0;
-            joystickKnob.style.transform = 'translate(0px, 0px)';
-        }
-
-        // Attack Button Events
-        attackButton.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            attackPressed = true;
-        });
-        
-        attackButton.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            attackPressed = false;
-        });
-        
-        attackButton.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            attackPressed = true;
-        });
-        
-        attackButton.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            attackPressed = false;
-        });
-        
-        attackButton.addEventListener('mouseleave', (e) => {
-            attackPressed = false;
-        });
-
-        // Joystick Events
-        joystick.addEventListener('touchstart', handleJoystickStart);
-        joystick.addEventListener('touchmove', handleJoystickMove);
-        joystick.addEventListener('touchend', handleJoystickEnd);
-        
-        joystick.addEventListener('mousedown', handleJoystickStart);
-        joystick.addEventListener('mousemove', handleJoystickMove);
-        joystick.addEventListener('mouseup', handleJoystickEnd);
-        joystick.addEventListener('mouseleave', handleJoystickEnd);
-
-        // Tiere spawnen
-        function spawnCreatures() {
-            // Beute (kleine Tiere)
-            if (prey.length < 8 && Math.random() < 0.02) {
-                let size = 10 + Math.random() * 12;
-                let types = ['Hase', 'Fuchs', 'Reh', 'Waschbär'];
-                let colors = ['#A9A9A9', '#FF6347', '#8B4513', '#708090'];
-                let typeIndex = Math.floor(Math.random() * types.length);
-                
-                prey.push({
-                    x: Math.random() * (canvas.width - 50) + 25,
-                    y: Math.random() * (canvas.height - 50) + 25,
-                    size: size,
-                    speed: 0.8 + Math.random() * 1.5,
-                    health: Math.floor(size),
-                    type: 'prey',
-                    animalType: types[typeIndex],
-                    color: colors[typeIndex],
-                    worth: Math.floor(size * 2)
-                });
-            }
-            
-            // Feinde (gefährliche Tiere)
-            if (enemies.length < 5 && Math.random() < 0.01) {
-                let size = 18 + Math.random() * 15;
-                let types = ['Tiger', 'Löwe', 'Bär', 'Wolf'];
-                let colors = ['#FF4500', '#FFD700', '#8B4513', '#696969'];
-                let typeIndex = Math.floor(Math.random() * types.length);
-                
-                enemies.push({
-                    x: Math.random() * (canvas.width - 60) + 30,
-                    y: Math.random() * (canvas.height - 60) + 30,
-                    size: size,
-                    speed: 0.4 + Math.random(),
-                    health: Math.floor(size * 1.8),
-                    damage: Math.floor(size / 1.5),
-                    type: 'enemy',
-                    animalType: types[typeIndex],
-                    color: colors[typeIndex],
-                    worth: Math.floor(size * 3)
-                });
-            }
-        }
-
-        // Bewegung mit Joystick
-        function movePlayer() {
-            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
-                player.x += joystickVector.x * player.speed;
-                player.y += joystickVector.y * player.speed;
-                
-                // Im Canvas bleiben
-                player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
-                player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
-            }
-        }
-
-        // Bewegung der Tiere
-        function moveCreatures() {
-            prey.forEach(animal => {
-                animal.x += (Math.random() - 0.5) * animal.speed * 2;
-                animal.y += (Math.random() - 0.5) * animal.speed * 2;
-                animal.x = Math.max(animal.size, Math.min(canvas.width - animal.size, animal.x));
-                animal.y = Math.max(animal.size, Math.min(canvas.height - animal.size, animal.y));
-            });
-
-            enemies.forEach(enemy => {
-                let dx = player.x - enemy.x;
-                let dy = player.y - enemy.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance > 0) {
-                    enemy.x += (dx / distance) * enemy.speed;
-                    enemy.y += (dy / distance) * enemy.speed;
-                }
-                
-                enemy.x = Math.max(enemy.size, Math.min(canvas.width - enemy.size, enemy.x));
-                enemy.y = Math.max(enemy.size, Math.min(canvas.height - enemy.size, enemy.y));
-            });
-        }
-
-        // Kampfsystem
-        function handleCombat() {
-            // Angriff
-            if (attackPressed && attackCooldown <= 0) {
-                attackCooldown = 8;
-                
-                // Beute angreifen
-                for (let i = prey.length - 1; i >= 0; i--) {
-                    let animal = prey[i];
-                    let dx = player.x - animal.x;
-                    let dy = player.y - animal.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < player.size + animal.size + 15) {
-                        animal.health -= player.strength;
-                        
-                        if (animal.health <= 0) {
-                            player.score += animal.worth;
-                            player.size += 0.3;
-                            player.exp += animal.worth;
-                            prey.splice(i, 1);
-                            
-                            // Level up
-                            if (player.exp >= player.expToNextLevel) {
-                                player.level++;
-                                player.strength += 8;
-                                player.exp = 0;
-                                player.expToNextLevel *= 1.6;
-                                player.maxHealth += 30;
-                                player.health = player.maxHealth;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-                // Feinde angreifen
-                for (let i = enemies.length - 1; i >= 0; i--) {
-                    let enemy = enemies[i];
-                    let dx = player.x - enemy.x;
-                    let dy = player.y - enemy.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < player.size + enemy.size + 20) {
-                        enemy.health -= player.strength;
-                        
-                        if (enemy.health <= 0) {
-                            player.score += enemy.worth;
-                            player.size += 0.8;
-                            player.exp += enemy.worth * 1.5;
-                            enemies.splice(i, 1);
-                            
-                            if (player.exp >= player.expToNextLevel) {
-                                player.level++;
-                                player.strength += 8;
-                                player.exp = 0;
-                                player.expToNextLevel *= 1.6;
-                                player.maxHealth += 30;
-                                player.health = player.maxHealth;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            
-            // Feinde greifen an
-            enemies.forEach(enemy => {
-                let dx = player.x - enemy.x;
-                let dy = player.y - enemy.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < player.size + enemy.size) {
-                    if (Math.random() < 0.02) {
-                        player.health -= enemy.damage;
-                        
-                        if (player.health <= 0) {
-                            gameRunning = false;
-                            setTimeout(() => {
-                                alert('Game Over! Panda Ege hat ' + player.score + ' Punkte erreicht!');
-                                resetGame();
-                            }, 100);
-                        }
-                    }
-                }
-            });
-            
-            if (attackCooldown > 0) attackCooldown--;
-        }
-
-        // Echten Panda zeichnen
-        function drawPanda(x, y, size) {
-            // Körper (hinterer Teil)
-            ctx.beginPath();
-            ctx.ellipse(x, y, size * 1.1, size * 0.9, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Bauch (weißer Bereich)
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.2, y, size * 0.8, size * 0.7, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFF';
-            ctx.fill();
-            
-            // Kopf
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.3, size * 0.8, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            // Gesicht (weiß)
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.4, size * 0.6, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFF';
-            ctx.fill();
-            
-            // Schwarze Augenringe
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.8, y - size * 0.5, size * 0.25, size * 0.2, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.ellipse(x - size * 0.2, y - size * 0.5, size * 0.25, size * 0.2, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#000';
-            ctx.fill();
-            
-            // Augen
-            ctx.fillStyle = '#FFF';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.8, y - size * 0.55, size * 0.08, 0, Math.PI * 2);
-            ctx.arc(x - size * 0.2, y - size * 0.55, size * 0.08, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.8, y - size * 0.55, size * 0.04, 0, Math.PI * 2);
-            ctx.arc(x - size * 0.2, y - size * 0.55, size * 0.04, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Nase
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.5, y - size * 0.3, size * 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Ohren
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.9, y - size * 0.7, size * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(x - size * 0.1, y - size * 0.7, size * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Bambus im Maul (weil Panda)
-            ctx.fillStyle = '#00AA00';
-            ctx.fillRect(x - size * 0.4, y - size * 0.25, size * 0.3, size * 0.1);
-            ctx.fillStyle = '#008800';
-            ctx.fillRect(x - size * 0.35, y - size * 0.3, size * 0.05, size * 0.2);
-        }
-
-        // Zeichnen Funktion
-        function draw() {
-            // Himmel
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Waldboden
-            ctx.fillStyle = '#2d5a27';
-            ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-            
-            // Grashalme
-            ctx.strokeStyle = '#1a3a1a';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 20; i++) {
-                let x = (i * 40) + (Math.random() * 20);
-                ctx.beginPath();
-                ctx.moveTo(x, canvas.height - 50);
-                ctx.lineTo(x - 10, canvas.height - 70);
-                ctx.lineTo(x + 10, canvas.height - 90);
-                ctx.stroke();
-            }
-            
-            // Beute zeichnen
-            prey.forEach(animal => {
-                // Körper
-                ctx.beginPath();
-                ctx.ellipse(animal.x, animal.y, animal.size, animal.size * 0.8, 0, 0, Math.PI * 2);
-                ctx.fillStyle = animal.color;
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                
-                // Kopf
-                ctx.beginPath();
-                ctx.arc(animal.x + animal.size * 0.5, animal.y - animal.size * 0.3, animal.size * 0.5, 0, Math.PI * 2);
-                ctx.fillStyle = animal.color;
-                ctx.fill();
-                ctx.stroke();
-                
-                // Augen
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(animal.x + animal.size * 0.3, animal.y - animal.size * 0.4, animal.size * 0.1, 0, Math.PI * 2);
-                ctx.arc(animal.x + animal.size * 0.7, animal.y - animal.size * 0.4, animal.size * 0.1, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Gesundheitsbalken
-                ctx.fillStyle = '#00FF00';
-                ctx.fillRect(animal.x - animal.size, animal.y - animal.size - 15, 
-                           (animal.health / (animal.size)) * animal.size * 2, 5);
-            });
-            
-            // Feinde zeichnen
-            enemies.forEach(enemy => {
-                // Körper
-                ctx.beginPath();
-                ctx.ellipse(enemy.x, enemy.y, enemy.size, enemy.size * 0.9, 0, 0, Math.PI * 2);
-                ctx.fillStyle = enemy.color;
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                
-                // Kopf
-                ctx.beginPath();
-                ctx.arc(enemy.x - enemy.size * 0.3, enemy.y - enemy.size * 0.4, enemy.size * 0.6, 0, Math.PI * 2);
-                ctx.fillStyle = enemy.color;
-                ctx.fill();
-                ctx.stroke();
-                
-                // Böse Augen
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(enemy.x - enemy.size * 0.5, enemy.y - enemy.size * 0.6, enemy.size * 0.1, 0, Math.PI * 2);
-                ctx.arc(enemy.x - enemy.size * 0.1, enemy.y - enemy.size * 0.6, enemy.size * 0.1, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Augenbrauen (böse)
-                ctx.beginPath();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 3;
-                ctx.moveTo(enemy.x - enemy.size * 0.7, enemy.y - enemy.size * 0.8);
-                ctx.lineTo(enemy.x - enemy.size * 0.4, enemy.y - enemy.size * 0.7);
-                ctx.moveTo(enemy.x - enemy.size * 0.3, enemy.y - enemy.size * 0.8);
-                ctx.lineTo(enemy.x, enemy.y - enemy.size * 0.7);
-                ctx.stroke();
-                
-                // Gesundheitsbalken
-                ctx.fillStyle = '#FF0000';
-                ctx.fillRect(enemy.x - enemy.size, enemy.y - enemy.size - 20, 
-                           (enemy.health / (enemy.size * 1.8)) * enemy.size * 2, 5);
-            });
-            
-            // Panda Ege zeichnen (mit richtiger Panda-Darstellung)
-            drawPanda(player.x, player.y, player.size);
-            
-            // Gesundheitsbalken Spieler
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(20, 20, (player.health / player.maxHealth) * 200, 25);
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(20, 20, 200, 25);
-            ctx.fillStyle = '#FFF';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText(`❤️ ${Math.floor(player.health)}/${player.maxHealth}`, 25, 40);
-            
-            // Stats aktualisieren
-            document.getElementById('level').textContent = player.level;
-            document.getElementById('size').textContent = Math.round((player.size / 30) * 100) + '%';
-            document.getElementById('strength').textContent = player.strength;
-            document.getElementById('score').textContent = player.score;
-        }
-
-        // Spiel zurücksetzen
-        function resetGame() {
-            player = {
-                x: 400,
-                y: 250,
-                size: 30,
-                speed: 4,
-                level: 1,
-                strength: 15,
-                score: 0,
-                health: 150,
-                maxHealth: 150,
-                exp: 0,
-                expToNextLevel: 75,
-                bambooEaten: 0
-            };
-            prey = [];
-            enemies = [];
-            gameRunning = true;
-        }
-
-        // Hauptspiel-Schleife
-        function gameLoop() {
-            if (gameRunning) {
-                movePlayer();
-                spawnCreatures();
-                moveCreatures();
-                handleCombat();
-                draw();
-            }
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Verhindere Scrollen auf der ganzen Seite
-        document.body.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-
-        document.body.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-
-        // Spiel starten
-        gameLoop();
+        updateDisplay();
+        updateShop();
     </script>
 </body>
 </html>
